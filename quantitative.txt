@@ -14,24 +14,26 @@ memory usage (MB of RAM)
 time to compute (sec)
 ---------------------
 
-1.790 compute pz = pt*sinh(eta) on JaggedArrays with pure-Python for loops
+45.900 load from warmed cache and compute pz = pt*sinh(eta) in PyROOT
 
-1.240 compute pz = pt*sinh(eta) on Python lists of lists of dicts
+ 1.790 compute pz = pt*sinh(eta) on JaggedArrays with pure-Python for loops
 
-1.230 compute pz = pt*sinh(eta) on Python lists of lists of classes with __slots__
+ 1.240 compute pz = pt*sinh(eta) on Python lists of lists of dicts
 
-0.770 load from warmed cache in root-numpy
+ 1.230 compute pz = pt*sinh(eta) on Python lists of lists of classes with __slots__
 
-0.538 load from warmed cache and compute pz = pt*sinh(eta) in ROOT RDataFrame
+ 0.770 load from warmed cache in root-numpy
 
-0.164 load from warmed cache and compute pz = pt*sinh(eta) in ROOT TTreeReader
+ 0.538 load from warmed cache and compute pz = pt*sinh(eta) in ROOT RDataFrame
 
-0.142 load from warmed cache and compute pz = pt*sinh(eta) with ROOT TBranch::GetEntry
+ 0.164 load from warmed cache and compute pz = pt*sinh(eta) in ROOT TTreeReader
 
-0.113 compute pz = pt*sinh(eta) on std::vector<std::vector<struct>>
+ 0.142 load from warmed cache and compute pz = pt*sinh(eta) with ROOT TBranch::GetEntry
 
-0.047 load from warmed cache in uproot
+ 0.113 compute pz = pt*sinh(eta) on std::vector<std::vector<struct>>
 
-0.030 compute pz = pt*sinh(eta) on JaggedArrays with Numpy-like interface
+ 0.047 load from warmed cache in uproot
 
-0.023 compute pz = pt*sinh(eta) on JaggedArrays with for loops accelerated by Numba
+ 0.030 compute pz = pt*sinh(eta) on JaggedArrays with Numpy-like interface
+
+ 0.023 compute pz = pt*sinh(eta) on JaggedArrays with for loops accelerated by Numba
