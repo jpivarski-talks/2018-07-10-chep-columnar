@@ -118,32 +118,6 @@ HERE
 \end{center}
 \end{frame}
 
-\begin{frame}[fragile]{PyROOT load and compute}
-\scriptsize
-\begin{minted}{python}
-import math
-import numpy
-import ROOT
-
-file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
-tree = file.Get("tree")
-
-tree.SetBranchStatus("*", 0)
-tree.SetBranchStatus("nMuon", 1)
-tree.SetBranchStatus("Muon_pt", 1)
-tree.SetBranchStatus("Muon_eta", 1)
-
-pz = numpy.empty(552056, dtype=numpy.float32)
-
-%%timeit
-k = 0
-for event in tree:
-    for pt, eta in zip(event.Muon_pt, event.Muon_eta):
-        pz[k] = pt * math.sinh(eta)
-        k += 1
-\end{minted}
-\end{frame}
-
 \begin{frame}[fragile]{JaggedArray compute in Python for loops}
 \vspace{0.3 cm}
 \scriptsize
@@ -174,6 +148,16 @@ def callme(pz, events):
 callme(pz, events)
 \end{minted}
 \end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{JaggedArray compute as Numpy-like ufunc}
+\scriptsize
+\begin{minted}{python}
+import numpy
+
+%%timeit
+pz = events["pt"] * numpy.sinh(events["eta"])
+\end{minted}
 \end{frame}
 
 \begin{frame}[fragile]{Python list of lists of dicts/classes compute in Python for loops}
@@ -246,40 +230,163 @@ root_numpy.tree2array(tree, ["Muon_pt", "Muon_eta", "Muon_phi"])
 
 
 import uproot
-tree = uproot.open("../NanoAOD-DYJetsToLL.root")["tree"]
+tree = uproot.open("NanoAOD-DYJetsToLL.root")["tree"]
 
 %%timeit
 pt, eta, phi = tree.arrays(["Muon_pt", "Muon_eta", "Muon_phi"], outputtype=tuple)
 \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]{ROOT RDataFrame load and compute}
+\begin{frame}[fragile]{PyROOT load and compute}
 \scriptsize
-\begin{minted}{c++}
+\begin{minted}{python}
+import math
+import numpy
+import ROOT
+
+file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
+tree = file.Get("tree")
+
+tree.SetBranchStatus("*", 0)
+tree.SetBranchStatus("nMuon", 1)
+tree.SetBranchStatus("Muon_pt", 1)
+tree.SetBranchStatus("Muon_eta", 1)
+
+pz = numpy.empty(552056, dtype=numpy.float32)
+
+%%timeit
+k = 0
+for event in tree:
+    for pt, eta in zip(event.Muon_pt, event.Muon_eta):
+        pz[k] = pt * math.sinh(eta)
+        k += 1
 \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{ROOT RDataFrame load and compute}
+\vspace{0.1 cm}
+\scriptsize
+\begin{columns}
+\column{1.05\linewidth}
+\begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
+
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+ROOT::RDataFrame rdf("tree", file);
+
+TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
+tree->SetBranchStatus("*", 0);
+tree->SetBranchStatus("nMuon", 1);
+tree->SetBranchStatus("Muon_pt", 1);
+tree->SetBranchStatus("Muon_eta", 1);
+
+float pz[552056];
+gettimeofday(&starttime, 0);
+int k = 0;
+rdf.Foreach([&k](ROOT::VecOps::RVec<float> Muon_pt, ROOT::VecOps::RVec<float> Muon_eta) {
+    for (int i = 0;  i < Muon_pt.size();  i++) {
+        pz[k]= Muon_pt[i] * sinh(Muon_eta[i]);
+        k++;
+    }
+}, {"Muon_pt", "Muon_eta"});
+gettimeofday(&endtime, 0);
+\end{minted}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{ROOT TTreeReader load and compute}
 \scriptsize
+\begin{columns}
+\column{1.05\linewidth}
 \begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
+
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
+tree->SetBranchStatus("*", 0);
+tree->SetBranchStatus("nMuon", 1);
+tree->SetBranchStatus("Muon_pt", 1);
+tree->SetBranchStatus("Muon_eta", 1);
+
+TTreeReader reader("tree", file);
+TTreeReaderArray<float> pt(reader, "Muon_pt");
+TTreeReaderArray<float> eta(reader, "Muon_eta");
+
+gettimeofday(&starttime, 0);
+int k = 0;
+while (reader.Next()) {
+    for (int i = 0;  i < pt.GetSize();  i++) {
+        pz[k] = pt[i] * sinh(eta[i]);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
 \end{minted}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{ROOT TBranch::GetEntry load and compute}
+\vspace{0.2 cm}
 \scriptsize
+\begin{columns}
+\column{1.1\linewidth}
 \begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
+
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+TTree* tree; file->GetObject("tree", tree);
+
+UInt_t nMuon; float pts[10]; float etas[10];
+TBranch* nbranch = tree->GetBranch("nMuon");       tree->SetBranchAddress("nMuon", &nMuon);
+TBranch* ptbranch = tree->GetBranch("Muon_pt");    tree->SetBranchAddress("Muon_pt", pts);
+TBranch* etabranch = tree->GetBranch("Muon_eta");  tree->SetBranchAddress("Muon_eta", etas);
+
+gettimeofday(&starttime, 0);
+int k = 0;
+for (int i = 0;  i < 701716;  i++) {
+    // TBranch::GetEntry, rather than TTree::GetEntry, avoids a loop over branches
+    nbranch->GetEntry(i);    ptbranch->GetEntry(i);    etabranch->GetEntry(i);
+    for (int j = 0;  j < nMuon;  j++) {
+        pz[k] = pts[j] * sinh(etas[j]);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
 \end{minted}
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{C++ {\tt\normalsize std::vector<std::vector<struct>>}}
+\begin{frame}[fragile]{C++ {\tt std::vector<std::vector<struct>>}}
+\vspace{0.3 cm}
 \scriptsize
 \begin{minted}{c++}
-\end{minted}
-\end{frame}
+struct Muon {
+    float pt;
+    float eta;
+    float phi;
+};
 
-\begin{frame}[fragile]{JaggedArray compute as Numpy-like ufunc}
-\scriptsize
-\begin{minted}{python}
+struct Event {
+    std::vector<Muon> muons;
+};
+
+auto events = // std::vector<std::vector<Muon>>, filled with push_back
+
+gettimeofday(&starttime, 0);
+int k = 0;
+for (int i = 0;  i < events.size();  i++) {
+    for (int j = 0;  j < events[i].muons.size();  j++) {
+        pz[k] = events[i].muons[j].pt * sinh(events[i].muons[j].eta);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
 \end{minted}
 \end{frame}
 
