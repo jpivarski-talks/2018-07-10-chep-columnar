@@ -90,8 +90,8 @@ HERE
 & \textcolor{darkblue}{\underline{time to complete load, compute, or both (sec)}} \\
 & \\
 45.9\textcolor{white}{00} & PyROOT load and compute \\
+12.9\textcolor{white}{00} & JaggedArray compute in Python for loops \\
 & \\
- 1.79\textcolor{white}{0} & JaggedArray compute in Python for loops \\
  1.24\textcolor{white}{0} & Python list of lists of dicts in Python for loops \\
  1.23\textcolor{white}{0} & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops \\
 & \\
@@ -110,5 +110,166 @@ HERE
 \end{columns}
 \end{frame}
 
+
+\begin{frame}
+\huge
+\begin{center}
+\textcolor{darkblue}{Backup}
+\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{PyROOT load and compute}
+\scriptsize
+\begin{minted}{python}
+import math
+import numpy
+import ROOT
+
+file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
+tree = file.Get("tree")
+
+tree.SetBranchStatus("*", 0)
+tree.SetBranchStatus("nMuon", 1)
+tree.SetBranchStatus("Muon_pt", 1)
+tree.SetBranchStatus("Muon_eta", 1)
+
+pz = numpy.empty(552056, dtype=numpy.float32)
+
+%%timeit
+k = 0
+for event in tree:
+    for pt, eta in zip(event.Muon_pt, event.Muon_eta):
+        pz[k] = pt * math.sinh(eta)
+        k += 1
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{JaggedArray compute in Python for loops}
+\vspace{0.3 cm}
+\scriptsize
+\begin{minted}{python}
+%%timeit
+k = 0
+for event in events:
+    for muon in event:
+        pz[k] = muon.pt * math.sinh(muon.eta)
+        k += 1
+\end{minted}
+
+\vspace{0.5 cm}
+\hfill\begin{minipage}{0.6\linewidth}
+{\normalsize \ldots with Numba acceleration:}
+\begin{minted}{python}
+import numba
+
+@numpy.jit
+def callme(pz, events):
+    k = 0
+    for event in events:
+        for muon in event:
+            pz[k] = muon.pt * math.sinh(muon.eta)
+            k += 1
+
+%%timeit
+callme(pz, events)
+\end{minted}
+\end{minipage}
+\end{frame}
+
+\begin{frame}[fragile]{Python list of lists of dicts/classes compute in Python for loops}
+\scriptsize
+\begin{columns}[t]
+\column{0.5\linewidth}
+\begin{minted}{python}
+from math import sinh
+
+events = [
+    [],
+    [{"pt": 129.8,
+      "eta": -1.006,
+      "phi": -0.581},
+     {"pt": 73.08,
+      "eta": -0.719,
+      "phi": -1.51}],
+    ...
+    ]
+
+%%timeit
+k = 0
+for event in events:
+    for muon in event:
+        pz[k] = (muon["pt"] *
+                 sinh(muon["eta"]))
+        k += 1
+\end{minted}
+
+\column{0.5\linewidth}
+\begin{minted}{python}
+class Muon(object):
+    __slots__ = ["pt", "eta", "phi"]
+    def __init__(self, pt, eta, phi):
+        self.pt = pt
+        self.eta = eta
+        self.phi = phi
+
+events = [
+    [],
+    [Muon(129.8, -1.006, -0.581),
+     Muon(73.08, -0.719, -1.51)],
+    ...
+    ]
+
+%%timeit
+k = 0
+for event in asobjs:
+    for muon in event:
+        pz[k] = (muon.pt *
+                 sinh(muon.eta))
+        k += 1
+\end{minted}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{root\_numpy load}
+\scriptsize
+\begin{minted}{python}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{ROOT RDataFrame load and compute}
+\scriptsize
+\begin{minted}{c++}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{ROOT TTreeReader load and compute}
+\scriptsize
+\begin{minted}{c++}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{ROOT TBranch::GetEntry load and compute}
+\scriptsize
+\begin{minted}{c++}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{C++ {\tt\normalsize std::vector<std::vector<struct>>}}
+\scriptsize
+\begin{minted}{c++}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{uproot load}
+\scriptsize
+\begin{minted}{python}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{JaggedArray compute as Numpy-like ufunc}
+\scriptsize
+\begin{minted}{python}
+\end{minted}
+\end{frame}
 
 \end{document}

@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.34339623"
-     inkscape:cx="958.43622"
-     inkscape:cy="342.9411"
+     inkscape:zoom="0.68679246"
+     inkscape:cx="983.03194"
+     inkscape:cy="356.68937"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -51,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -71,7 +71,7 @@
          sodipodi:role="line"
          id="tspan2991"
          x="32.63332"
-         y="1067.5217"></tspan></text>
+         y="1067.5217" /></text>
     <text
        xml:space="preserve"
        style="font-size:36px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
@@ -83,7 +83,7 @@
          sodipodi:role="line"
          id="tspan2995"
          x="22.861088"
-         y="1065.4644"></tspan></text>
+         y="1065.4644" /></text>
     <path
        id="path4550"
        style="color:#000000;fill:none;stroke:#000000;stroke-width:2.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
@@ -302,13 +302,13 @@
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#7400ff;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
        x="1334.0374"
-       y="607.4837"
+       y="485.80707"
        id="text4635"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4637"
          x="1334.0374"
-         y="607.4837">JaggedArray compute in Python for loops</tspan></text>
+         y="485.80707">JaggedArray compute in Python for loops</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#0000ff;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
@@ -487,8 +487,8 @@
        sodipodi:cy="621.58307"
        sodipodi:rx="3"
        sodipodi:ry="3"
-       d="m 1434.7993,621.58307 c 0,1.65685 -1.3431,3 -3,3 -1.6568,0 -3,-1.34315 -3,-3 0,-1.65686 1.3432,-3 3,-3 1.6569,0 3,1.34314 3,3 z"
-       transform="matrix(2,0,0,2,-1431.7993,-621.58307)" />
+       d="m 1434.7993,621.58307 a 3,3 0 1 1 -6,0 3,3 0 1 1 6,0 z"
+       transform="matrix(2,0,0,2,-1431.7993,-765.58307)" />
     <path
        sodipodi:type="arc"
        id="path4695"
@@ -590,8 +590,8 @@
        id="path4926"
        sodipodi:type="arc" />
     <path
-       transform="matrix(2,0,0,2,-1516.978,-643.90643)"
-       d="m 1434.7993,621.58307 c 0,1.65685 -1.3431,3 -3,3 -1.6568,0 -3,-1.34315 -3,-3 0,-1.65686 1.3432,-3 3,-3 1.6569,0 3,1.34314 3,3 z"
+       transform="matrix(2,0,0,2,-1516.978,-765.58307)"
+       d="m 1434.7993,621.58307 a 3,3 0 1 1 -6,0 3,3 0 1 1 6,0 z"
        sodipodi:ry="3"
        sodipodi:rx="3"
        sodipodi:cy="621.58307"
@@ -708,7 +708,7 @@
        sodipodi:nodetypes="cc" />
     <path
        style="color:#000000;fill:none;stroke:#7400ff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
-       d="m 1341.3596,364.39153 85.1787,22.32336"
+       d="m 1341.3596,242.71489 85.1787,0"
        id="path4997"
        inkscape:connector-curvature="0"
        transform="translate(5.261054,234.86818)"

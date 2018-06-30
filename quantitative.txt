@@ -19,7 +19,7 @@ time to compute (sec)
 
 45.900 load from warmed cache and compute pz = pt*sinh(eta) in PyROOT
 
- 1.790 compute pz = pt*sinh(eta) on JaggedArrays with pure-Python for loops
+12.900 compute pz = pt*sinh(eta) on JaggedArrays with pure-Python for loops
 
  1.240 compute pz = pt*sinh(eta) on Python lists of lists of dicts
 
