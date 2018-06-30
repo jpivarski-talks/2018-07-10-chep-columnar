@@ -66,7 +66,7 @@ HERE
 \end{frame}
 
 \begin{frame}{Landscape of vertical performance}
-\vspace{0.3 cm}
+\vspace{0.5 cm}
 \scriptsize
 
 \begin{columns}
@@ -84,7 +84,9 @@ HERE
  22.38 & {\tt\scriptsize std::vector<std::vector<struct>>} \\
  11.67 & JaggedArray of Table of pt, eta, phi \\
 & \\
-& \textcolor{gray}{\scriptsize (1 MB = 1024$^2$ bytes)}
+& \textcolor{gray}{\scriptsize 1 MB = 1024$^2$ bytes} \\
+& \textcolor{gray}{\scriptsize 701,716 events containing 552,056 muons} \\
+& \textcolor{gray}{\scriptsize storing pt, eta, phi as float32} \\
 \end{tabular}
 
 \vspace{2.3 cm}
@@ -109,11 +111,12 @@ HERE
  0.047 & uproot load \\
  0.030 & JaggedArray compute as Numpy-like ufunc \\
  0.023 & JaggedArray compute in Numba-accelerated Python for loops \\
+& \\
+& \textcolor{gray}{\scriptsize all with warmed disk cache} \\
 \end{tabular}
 \end{columns}
 \end{columns}
 \end{frame}
-
 
 \begin{frame}
 \huge
