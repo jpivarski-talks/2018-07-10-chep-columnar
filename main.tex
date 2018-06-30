@@ -65,7 +65,50 @@ HERE
 \end{columns}
 \end{frame}
 
+\begin{frame}{Landscape of vertical performance}
+\vspace{0.3 cm}
+\scriptsize
 
+\begin{columns}
+\column{1.1\linewidth}
+\begin{columns}
+\column{0.38\linewidth}
+\begin{tabular}{r p{0.9\linewidth}}
+& \textcolor{darkblue}{\underline{RAM memory occupied by data (MB)}} \\
+& \\
+311.95 & Python list of lists of dicts \\
+139.79 & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes \\
+& \\
+ 37.19 & serialized JSON text (for reference) \\
+& \\
+ 22.38 & {\tt\scriptsize std::vector<std::vector<struct>>} \\
+ 11.67 & JaggedArray of Table of pt, eta, phi \\
+\end{tabular}
+
+\column{0.6\linewidth}
+\begin{tabular}{r p{0.9\linewidth}}
+& \textcolor{darkblue}{\underline{time to complete load, compute, or both (sec)}} \\
+& \\
+45.9\textcolor{white}{00} & PyROOT load and compute \\
+& \\
+ 1.79\textcolor{white}{0} & JaggedArray compute in Python for loops \\
+ 1.24\textcolor{white}{0} & Python list of lists of dicts in Python for loops \\
+ 1.23\textcolor{white}{0} & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops \\
+& \\
+ 0.770 & root\_numpy load \\
+& \\
+ 0.538 & ROOT RDataFrame load and compute \\
+ 0.164 & ROOT TTreeReader load and compute \\
+ 0.142 & ROOT TBranch::GetEntry load and compute \\
+ 0.113 & C++ {\tt\scriptsize std::vector<std::vector<struct>>} compute \\
+& \\
+ 0.047 & uproot load \\
+ 0.030 & JaggedArray compute as Numpy-like ufunc \\
+ 0.023 & JaggedArray compute in Numba-accelerated Python for loops \\
+\end{tabular}
+\end{columns}
+\end{columns}
+\end{frame}
 
 
 \end{document}
