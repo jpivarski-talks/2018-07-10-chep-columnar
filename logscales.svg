@@ -24,9 +24,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.34339623"
-     inkscape:cx="557.74752"
-     inkscape:cy="186.47662"
+     inkscape:zoom="1.3735849"
+     inkscape:cx="775.11815"
+     inkscape:cy="174.7807"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -370,7 +370,7 @@
          sodipodi:role="line"
          id="tspan4665"
          x="1334.1218"
-         y="850.09949">C++ std::vector&lt;std::vector&lt;struct&gt;&gt; compute</tspan></text>
+         y="850.09949">std::vector&lt;std::vector&lt;struct&gt;&gt; compute</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#ff6600;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"

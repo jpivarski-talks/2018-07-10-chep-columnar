@@ -60,7 +60,27 @@
 
 \begin{frame}{First slide}
 \vspace{0.5 cm}
-HERE
+\end{frame}
+
+\begin{frame}{HERE}
+\begin{columns}
+\column{0.4\linewidth}
+
+\column{0.55\linewidth}
+\vspace{0.3 cm}
+\includegraphics[width=\linewidth]{performance-gap.jpg}
+
+\vspace{0.25 cm}
+\begin{columns}
+\column{0.2\linewidth}
+\column{0.4\linewidth}
+\tiny
+From Hennessy \& Patterson, {\it Computer Architecture, A~Quantitative Approach}
+
+\column{0.25\linewidth}
+\hspace{-0.5 cm}\includegraphics[width=\linewidth]{hennessy-book.jpg}
+\end{columns}
+\end{columns}
 \end{frame}
 
 \begin{frame}{Landscape of vertical performance}
@@ -104,8 +124,8 @@ HERE
 & \\
 45.9\textcolor{white}{00} & \textcolor{rootcolor}{PyROOT load and compute} \\
 12.9\textcolor{white}{00} & \textcolor{mycolor}{JaggedArray compute in Python for loops} \\
-1.67\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} \\
 & \\
+1.67\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} \\
  1.24\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of dicts in Python for loops} \\
  1.23\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops} \\
 & \\
@@ -114,7 +134,7 @@ HERE
  0.538 & \textcolor{rootcolor}{ROOT RDataFrame load and compute} \\
  0.164 & \textcolor{rootcolor}{ROOT TTreeReader load and compute} \\
  0.142 & \textcolor{rootcolor}{ROOT TBranch::GetEntry load and compute} \\
- 0.113 & \textcolor{cppcolor}{C++ {\tt\scriptsize std::vector<std::vector<struct>>} compute} \\
+ 0.113 & \textcolor{cppcolor}{{\tt\scriptsize std::vector<std::vector<struct>>} compute} \\
 & \\
  0.047 & \textcolor{mycolor}{uproot load} \\
  0.030 & \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} \\
@@ -392,7 +412,7 @@ gettimeofday(&endtime, 0);
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{C++ {\tt std::vector<std::vector<struct>>}}
+\begin{frame}[fragile]{{\tt std::vector<std::vector<struct>>}}
 \vspace{0.3 cm}
 \scriptsize
 \begin{minted}{c++}
