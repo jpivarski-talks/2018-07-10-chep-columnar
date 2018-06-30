@@ -6,6 +6,8 @@ memory usage (MB of RAM)
 
 311.95 Python lists of lists of dicts
 
+215.11 root\_numpy's array of arrays
+
 139.79 Python lists of lists of classes with __slots__
 
  37.19 serialized JSON text (for reference; not an executable state)
@@ -20,6 +22,8 @@ time to compute (sec)
 45.900 load from warmed cache and compute pz = pt*sinh(eta) in PyROOT
 
 12.900 compute pz = pt*sinh(eta) on JaggedArrays with pure-Python for loops
+
+ 1.670 compute pz = pt*sinh(eta) on root_numpy's array of arrays in a loop over ufuncs
 
  1.240 compute pz = pt*sinh(eta) on Python lists of lists of dicts
 

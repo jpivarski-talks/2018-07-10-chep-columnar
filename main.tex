@@ -30,6 +30,12 @@
 \definecolor{darkgreen}{rgb}{0,0.6,0}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
+\definecolor{mycolor}{HTML}{FF6600}
+\definecolor{cppcolor}{HTML}{00AAD4}
+\definecolor{rootcolor}{HTML}{2A2AFF}
+\definecolor{rootnpcolor}{HTML}{008000}
+\definecolor{pythoncolor}{HTML}{FF00CC}
+
 \title[2018-07-10-chep-columnar]{Columnar data processing for HEP analysis}
 \author{Jim Pivarski}
 \institute{Princeton University -- DIANA-HEP}
@@ -76,13 +82,14 @@ HERE
 \begin{tabular}{r p{0.9\linewidth}}
 & \textcolor{darkblue}{\underline{RAM memory occupied by data (MB)}} \\
 & \\
-311.95 & Python list of lists of dicts \\
-139.79 & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes \\
+311.95 & \textcolor{pythoncolor}{Python list of lists of dicts} \\
+215.11 & \textcolor{rootnpcolor}{root\_numpy's array of arrays} \\
+139.79 & \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes} \\
 & \\
- 37.19 & serialized JSON text (for reference) \\
+ 37.19 & \textcolor{gray}{serialized JSON text (for reference)} \\
 & \\
- 22.38 & {\tt\scriptsize std::vector<std::vector<struct>>} \\
- 11.67 & JaggedArray of Table of pt, eta, phi \\
+ 22.38 & \textcolor{cppcolor}{\tt\scriptsize std::vector<std::vector<struct>>} \\
+ 11.67 & \textcolor{mycolor}{JaggedArray of Table of pt, eta, phi} \\
 & \\
 & \textcolor{gray}{\scriptsize 1 MB = 1024$^2$ bytes} \\
 & \textcolor{gray}{\scriptsize 701,716 events containing 552,056 muons} \\
@@ -95,22 +102,23 @@ HERE
 \begin{tabular}{r p{0.9\linewidth}}
 & \textcolor{darkblue}{\underline{time to complete load, compute, or both (sec)}} \\
 & \\
-45.9\textcolor{white}{00} & PyROOT load and compute \\
-12.9\textcolor{white}{00} & JaggedArray compute in Python for loops \\
+45.9\textcolor{white}{00} & \textcolor{rootcolor}{PyROOT load and compute} \\
+12.9\textcolor{white}{00} & \textcolor{mycolor}{JaggedArray compute in Python for loops} \\
+1.67\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} \\
 & \\
- 1.24\textcolor{white}{0} & Python list of lists of dicts in Python for loops \\
- 1.23\textcolor{white}{0} & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops \\
+ 1.24\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of dicts in Python for loops} \\
+ 1.23\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops} \\
 & \\
- 1.01\textcolor{white}{0} & root\_numpy load \\
+ 1.01\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy load} \\
 & \\
- 0.538 & ROOT RDataFrame load and compute \\
- 0.164 & ROOT TTreeReader load and compute \\
- 0.142 & ROOT TBranch::GetEntry load and compute \\
- 0.113 & C++ {\tt\scriptsize std::vector<std::vector<struct>>} compute \\
+ 0.538 & \textcolor{rootcolor}{ROOT RDataFrame load and compute} \\
+ 0.164 & \textcolor{rootcolor}{ROOT TTreeReader load and compute} \\
+ 0.142 & \textcolor{rootcolor}{ROOT TBranch::GetEntry load and compute} \\
+ 0.113 & \textcolor{cppcolor}{C++ {\tt\scriptsize std::vector<std::vector<struct>>} compute} \\
 & \\
- 0.047 & uproot load \\
- 0.030 & JaggedArray compute as Numpy-like ufunc \\
- 0.023 & JaggedArray compute in Numba-accelerated Python for loops \\
+ 0.047 & \textcolor{mycolor}{uproot load} \\
+ 0.030 & \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} \\
+ 0.023 & \textcolor{mycolor}{JaggedArray compute in Numba-accelerated Python for loops} \\
 & \\
 & \textcolor{gray}{\scriptsize all with warmed disk cache} \\
 \end{tabular}
@@ -157,14 +165,29 @@ callme(pz, events)
 \end{minipage}
 \end{frame}
 
-\begin{frame}[fragile]{JaggedArray compute as Numpy-like ufunc}
+\begin{frame}[fragile]{JaggedArray and root\_numpy ufuncs}
 \scriptsize
+{\normalsize JaggedArray compute as Numpy-like ufunc:}
 \begin{minted}{python}
 import numpy
 
 %%timeit
 pz = events["pt"] * numpy.sinh(events["eta"])
 \end{minted}
+
+\vspace{0.5 cm}
+\hfill\begin{minipage}{0.6\linewidth}
+{\normalsize root\_numpy compute in loop over ufuncs:}
+\begin{minted}{python}
+%%timeit
+k = 0
+for event in events:
+    pt = event["Muon_pt"]
+    eta = event["Muon_eta"]
+    pz[k : k + len(pt)] = pt * numpy.sinh(eta)
+    k += len(pt)
+\end{minted}
+\end{minipage}
 \end{frame}
 
 \begin{frame}[fragile]{Python list of lists of dicts/classes compute in Python for loops}
