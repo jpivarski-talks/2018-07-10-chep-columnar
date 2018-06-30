@@ -25,7 +25,7 @@ time to compute (sec)
 
  1.230 compute pz = pt*sinh(eta) on Python lists of lists of classes with __slots__
 
- 0.770 load from warmed cache in root-numpy
+ 1.010 load from warmed cache in root_numpy
 
  0.538 load from warmed cache and compute pz = pt*sinh(eta) in ROOT RDataFrame
 

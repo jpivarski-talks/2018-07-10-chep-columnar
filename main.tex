@@ -95,7 +95,7 @@ HERE
  1.24\textcolor{white}{0} & Python list of lists of dicts in Python for loops \\
  1.23\textcolor{white}{0} & Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops \\
 & \\
- 0.770 & root\_numpy load \\
+ 1.01\textcolor{white}{0} & root\_numpy load \\
 & \\
  0.538 & ROOT RDataFrame load and compute \\
  0.164 & ROOT TTreeReader load and compute \\
@@ -230,9 +230,26 @@ for event in asobjs:
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{root\_numpy load}
+\begin{frame}[fragile]{root\_numpy load and uproot load}
 \scriptsize
 \begin{minted}{python}
+import ROOT
+import root_numpy
+
+file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
+tree = file.Get("tree")
+
+%%timeit
+root_numpy.tree2array(tree, ["Muon_pt", "Muon_eta", "Muon_phi"])
+
+
+
+
+import uproot
+tree = uproot.open("../NanoAOD-DYJetsToLL.root")["tree"]
+
+%%timeit
+pt, eta, phi = tree.arrays(["Muon_pt", "Muon_eta", "Muon_phi"], outputtype=tuple)
 \end{minted}
 \end{frame}
 
@@ -257,12 +274,6 @@ for event in asobjs:
 \begin{frame}[fragile]{C++ {\tt\normalsize std::vector<std::vector<struct>>}}
 \scriptsize
 \begin{minted}{c++}
-\end{minted}
-\end{frame}
-
-\begin{frame}[fragile]{uproot load}
-\scriptsize
-\begin{minted}{python}
 \end{minted}
 \end{frame}
 
