@@ -333,20 +333,18 @@ vectorized algorithms to replace for-loop manipulations.
 >>> # broadcast per-event attributes to per-particle attributes:
 >>> events["MET"]["phi"] - events["jets"]["phi"]
 
->>> # apply cuts with Numpy-like masks:
->>> events_with_two = events["muons"][events["muons"].counts >= 2]
-
->>> # explode to event-wise pairs of muons (using only SIMD operations):
->>> pairs = events_with_two.pairs()
+>>> # explode to event-wise pairs (using only SIMD operations):
+>>> pairs = events.pairs()
 >>> pairs
-<JaggedArray [[<Pair 0> <Pair 1> <Pair 2>] [<Pair 3>]] at 0x7fd394033080>
+<JaggedArray [[<Pair 0> <Pair 1> <Pair 2>] [] [] [<Pair 3>]] at 0x7fd394033080>
 >>> pairs[0][0].tolist()
 {"_0": {"pt": 31.1, "phi": -0.481, "eta": 0.882, "pz": 31.128},
  "_1": {"pt": 9.76, "phi": -0.123, "eta": 0.924, "pz": 10.358}}
 
->>> m1, m2 = pairs["_0"], pairs["_1"]
->>> mass = numpy.sqrt(2*m1["pt"]*m2["pt"]*(
-...     numpy.cosh(m1["eta"] - m2["eta"]) - numpy.cos(m1["phi"] - m2["phi"])))
+>>> # compute invariant mass without a variable-length loop; this is auto-vectorizable
+>>> pt1, eta1, phi1 = pairs["_0"]["pt"], pairs["_0"]["eta"], pairs["_0"]["phi"]
+>>> pt2, eta2, phi2 = pairs["_1"]["pt"], pairs["_1"]["eta"], pairs["_1"]["phi"]
+>>> mass = numpy.sqrt(2*pt1*pt2*(numpy.cosh(eta1 - eta2) - numpy.cos(phi1 - phi2)))
 \end{minted}
 
 \normalsize
