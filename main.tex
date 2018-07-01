@@ -62,7 +62,7 @@
 \begin{frame}{Motivation}
 \vspace{0.5 cm}
 \large
-In the late stages of data analysis, only order-of-magnitude speedups translate into human productivity, and only if they're easy to set up.
+In the late stages of data analysis, only order-of-magnitude speedups translate into increased human productivity, and only if they're easy to set up.
 
 \vspace{0.5 cm}
 \uncover<2->{Producing a plot in a second instead of an hour is life-changing, but not if it takes two hours to write the script.}
@@ -143,7 +143,7 @@ Columnar data representations are particularly complex for hierarchically nested
 \vspace{0.5 cm}
 \Large
 \begin{center}
-\textcolor{darkblue}{Vertical performance through columnar data}
+\textcolor{darkblue}{Vertical performance from columnar data processing}
 
 \vspace{0.5 cm}
 {\it and}
@@ -269,13 +269,78 @@ awkward-array is a library in development to manipulate such structure like Nump
 \end{uncoverenv}
 \end{frame}
 
+\begin{frame}[fragile]{Manipulating columnar data}
+\vspace{0.3 cm}
+
+\hfill \includegraphics[height=3 cm]{jaydeep.jpg}
+
+\vspace{-3 cm}
+Jaydeep Nandi, our Google Summer of Code student, is investigating \\
+vectorized algorithms to replace for-loop manipulations.
+
+\vspace{0.1 cm}
+\scriptsize
+\begin{minted}{python}
+>>> # broadcast per-event attributes to per-particle attributes:
+>>> events["MET"]["phi"] - events["jets"]["phi"]
+
+>>> # apply cuts with Numpy-like masks:
+>>> events_with_two = events["muons"][events["muons"].counts >= 2]
+
+>>> # explode to event-wise pairs of muons:
+>>> pairs = events_with_two.pairs()
+>>> pairs
+<JaggedArray [[<Pair 0> <Pair 1> <Pair 2>] [<Pair 3>]] at 0x7fd394033080>
+>>> pairs[0][0].tolist()
+{"_0": {"pt": 31.1, "phi": -0.481, "eta": 0.882, "pz": 31.128},
+ "_1": {"pt": 9.76, "phi": -0.123, "eta": 0.924, "pz": 10.358}}
+
+>>> m1, m2 = pairs["_0"], pairs["_1"]
+>>> mass = numpy.sqrt(2*m1["pt"]*m2["pt"]*(
+...     numpy.cosh(m1["eta"] - m2["eta"]) - numpy.cos(m1["phi"] - m2["phi"])))
+\end{minted}
+
+\normalsize
+\vspace{0.1 cm}
+Incidentally, anything that can be expressed this way is ripe for GPU vectorization.
+\end{frame}
+
+\begin{frame}{Manipulating columnar data}
+\vspace{0.5 cm}
+Analysis functions that can't be expressed as explosions, masks, and reductions can at least be JIT-compiled.
+
+
+
+\scriptsize
+\begin{minted}{python}
+k = 0
+for event in events:
+    for muon in event:
+        pz[k] = muon.pt * math.sinh(muon.eta)
+        k += 1
+\end{minted}
+
+\vspace{0.5 cm}
+\hfill\begin{minipage}{0.6\linewidth}
+{\normalsize \ldots with Numba acceleration:}
+\begin{minted}{python}
+import numba
+
+@numpy.jit
+def callme(pz, events):
+    k = 0
+    for event in events:
+        for muon in event:
+            pz[k] = muon.pt * math.sinh(muon.eta)
+            k += 1
 
 
 
 
 
+\end{frame}
 
-\begin{frame}{Landscape of vertical performance}
+\begin{frame}{What does this buy us?}
 \vspace{0.3 cm}
 \begin{columns}
 \column{1.15\linewidth}
@@ -283,7 +348,7 @@ awkward-array is a library in development to manipulate such structure like Nump
 \end{columns}
 \end{frame}
 
-\begin{frame}{Landscape of vertical performance}
+\begin{frame}{What does this buy us?}
 \vspace{0.5 cm}
 \scriptsize
 
