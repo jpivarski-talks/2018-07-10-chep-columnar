@@ -391,6 +391,11 @@ def run(pz, events):
 \begin{minted}{python}
 import numba
 @numpy.jit
+% * <nandi.jaydeep296@gmail.com> 2018-07-01T10:09:14.601Z:
+% 
+% I think it should be @numba.jit,not @numpy.jit
+% 
+% ^.
 def run(pz, events):
   k = 0
   for event in events:
