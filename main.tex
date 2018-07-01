@@ -305,42 +305,54 @@ vectorized algorithms to replace for-loop manipulations.
 Incidentally, anything that can be expressed this way is ripe for GPU vectorization.
 \end{frame}
 
-\begin{frame}{Manipulating columnar data}
+\begin{frame}[fragile]{Manipulating columnar data}
 \vspace{0.5 cm}
-Analysis functions that can't be expressed as explosions, masks, and reductions can at least be JIT-compiled.
 
+\hfill \includegraphics[height=2 cm]{numba-logo.png}
 
+\vspace{-2 cm}
+
+Analysis functions that can't be expressed as explosions, masks, and \\
+reductions can at least be JIT-compiled. Numba (from Anaconda) is \\
+a JIT-compiler for Python code.
+
+\vspace{0.5 cm}
+I implemented awkward-array's predecessor, OAMap, as a Numba extension to get $\sim$500$\times$ speedups. I will apply the same techniques to the new library.
+
+\vspace{0.5 cm}
+\begin{columns}[t]
+\column{0.46\linewidth}
+\underline{Runs in 12.9 seconds}
+
+\scriptsize
+\vspace{2\baselineskip}
+\begin{minted}{python}
+def run(pz, events):
+  k = 0
+  for event in events:
+    for muon in event.muons:
+      pz[k] = muon.pt * math.sinh(muon.eta)
+      k += 1
+\end{minted}
+
+\column{0.46\linewidth}
+\underline{Runs in 0.023 seconds}
 
 \scriptsize
 \begin{minted}{python}
-k = 0
-for event in events:
-    for muon in event:
-        pz[k] = muon.pt * math.sinh(muon.eta)
-        k += 1
-\end{minted}
-
-\vspace{0.5 cm}
-\hfill\begin{minipage}{0.6\linewidth}
-{\normalsize \ldots with Numba acceleration:}
-\begin{minted}{python}
 import numba
-
 @numpy.jit
-def callme(pz, events):
-    k = 0
-    for event in events:
-        for muon in event:
-            pz[k] = muon.pt * math.sinh(muon.eta)
-            k += 1
-
-
-
-
-
+def run(pz, events):
+  k = 0
+  for event in events:
+    for muon in event.muons:
+      pz[k] = muon.pt * math.sinh(muon.eta)
+      k += 1
+\end{minted}
+\end{columns}
 \end{frame}
 
-\begin{frame}{What does this buy us?}
+\begin{frame}{What does all of this buy us?}
 \vspace{0.3 cm}
 \begin{columns}
 \column{1.15\linewidth}
@@ -348,7 +360,7 @@ def callme(pz, events):
 \end{columns}
 \end{frame}
 
-\begin{frame}{What does this buy us?}
+\begin{frame}{What does all of this buy us?}
 \vspace{0.5 cm}
 \scriptsize
 
@@ -357,7 +369,7 @@ def callme(pz, events):
 \begin{columns}
 \column{0.38\linewidth}
 \begin{tabular}{r p{0.9\linewidth}}
-& \textcolor{darkblue}{\underline{RAM memory occupied by data (MB)}} \\
+& \textcolor{darkblue}{\small\underline{RAM memory occupied by data (MB)}} \\
 & \\
 311.95 & \textcolor{pythoncolor}{Python list of lists of dicts} \\
 215.11 & \textcolor{rootnpcolor}{root\_numpy's array of arrays} \\
@@ -377,7 +389,7 @@ def callme(pz, events):
 
 \column{0.6\linewidth}
 \begin{tabular}{r p{0.9\linewidth}}
-& \textcolor{darkblue}{\underline{time to complete load, compute, or both (sec)}} \\
+& \textcolor{darkblue}{\small\underline{time to complete load, compute, or both (sec)}} \\
 & \\
 45.9\textcolor{white}{00} & \textcolor{rootcolor}{PyROOT load and compute} \\
 12.9\textcolor{white}{00} & \textcolor{mycolor}{JaggedArray compute in Python for loops} \\
