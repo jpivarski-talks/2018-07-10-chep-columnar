@@ -149,7 +149,7 @@ Columnar data representations are particularly complex for hierarchically nested
 {\it and}
 
 \vspace{0.5 cm}
-\textcolor{darkblue}{Convenient syntax for analysis scripts}
+\textcolor{darkblue}{Convenient syntax for analysis scripts (in Python)}
 \end{center}
 \end{frame}
 
@@ -196,8 +196,81 @@ Despite the fact that uproot is pure Python, throughput can exceed ROOT (C++) an
 \includegraphics[width=0.5\linewidth]{root-none-muon.png}\includegraphics[width=0.5\linewidth]{rootnumpy-none-muon.png}
 
 \vspace{0.5 cm}
-This is because it is merely casting basket bytes as arrays.
+This is because uproot is doing less work; only casting basket bytes as arrays.
 \end{frame}
+
+\begin{frame}[fragile]{Plotting columnar data}
+\vspace{0.5 cm}
+\hfill \includegraphics[height=1.5 cm]{histbook-logo.pdf}
+
+\vspace{-1.7 cm}
+The Numpy ecosystem lacks comprehensive, HEP-style \\
+histogramming and ROOT is designed for events. \\
+histbook provides array-at-a-time histogramming.
+
+\vspace{0.25 cm}
+\scriptsize
+\begin{minted}{python}
+>>> from histbook import *
+>>> h = Hist(bin("x", 100, -5, 5), profile("x**2 + err"), profile("-x**3 + err"))
+>>> h.fill(x=numpy.random.normal(0, 1, 10000),
+...        err=numpy.random.normal(0, 5, 10000))
+>>> beside(h.step("x"), h.marker("x", "x**2 + err"), h.marker("x", "-x**3 + err"))
+\end{minted}
+
+\mbox{ } \hfill \includegraphics[width=0.7\linewidth]{histbook-example.pdf} \hfill \mbox{ }
+
+\begin{minted}{python}
+>>> h.project("x").root()
+<ROOT.TH1D object at 0x62a1500>
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Manipulating columnar data}
+\vspace{0.5 cm}
+\hfill \includegraphics[height=2 cm]{awkward-logo.pdf}
+
+\vspace{-2 cm}
+The real problem, though, is doing {\it an analysis} on \\
+columnar data. JaggedArrays are awkward:
+
+\scriptsize
+\begin{minted}{python}
+>>> for event in range(event_muon_pts):
+...     for pt, eta in zip(muon_pts[event], muon_etas[event]):
+...         pz = pt * math.sinh(eta)
+\end{minted}
+
+\normalsize
+especially if you want view all muon attributes collectively as an object (a jagged table).
+
+\vspace{0.25 cm}
+\begin{uncoverenv}<2->
+awkward-array is a library in development to manipulate such structure like Numpy.
+
+\scriptsize
+\begin{minted}{python}
+>>> # do all events and particles in one call because they have the same structure:
+>>> events["muons"]["pt"] * numpy.sinh(events["muons"]["eta"])
+<JaggedArray [[31.128 10.358 8.669] [-6.120] [5.211] [-2.295 5.850]] at 0x7fd394033080>
+\end{minted}
+\end{uncoverenv}
+
+\begin{uncoverenv}<3->
+\scriptsize
+\begin{minted}{python}
+>>> # add new attributes to a jagged table:
+>>> events["muons"]["pz"] = events["muons"]["pt"] * numpy.sinh(events["muons"]["eta"])
+>>> events["muons"][0].tolist()
+[{"pt": 31.1, "phi": -0.481, "eta": 0.882, "pz": 31.128},
+ {"pt": 9.76, "phi": -0.123, "eta": 0.924, "pz": 10.358},
+ {"pt": 8.18, "phi": -0.119, "eta": 0.923, "pz": 8.669}]
+\end{minted}
+\end{uncoverenv}
+\end{frame}
+
+
+
 
 
 
