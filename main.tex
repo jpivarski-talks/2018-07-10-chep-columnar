@@ -209,7 +209,7 @@ Despite the fact that uproot is pure Python, throughput can exceed ROOT (C++) an
 \includegraphics[width=0.5\linewidth]{root-none-muon.png}\includegraphics[width=0.5\linewidth]{rootnumpy-none-muon.png}
 
 \vspace{0.25 cm}
-This is because uproot is doing less work; only casting basket bytes as arrays.
+This is because uproot is {\it doing less work;} only casting basket bytes as arrays.
 \end{frame}
 
 \begin{frame}[fragile]{Plotting columnar data}
@@ -255,11 +255,11 @@ columnar data. JaggedArrays are awkward:
 \end{minted}
 
 \normalsize
-especially if you want view all muon attributes collectively as an object (a jagged table).
+especially if you want view all muon attributes as an object (as a row of a jagged table).
 
 \vspace{0.25 cm}
 \begin{uncoverenv}<2->
-awkward-array is a library in development to manipulate such structure like Numpy.
+awkward-array is a library \textcolor{darkorange}{(in development!)} to manipulate such structures like Numpy.
 
 \scriptsize
 \begin{minted}{python}
@@ -274,6 +274,12 @@ awkward-array is a library in development to manipulate such structure like Nump
 \begin{minted}{python}
 >>> # add new attributes to a jagged table:
 >>> events["muons"]["pz"] = events["muons"]["pt"] * numpy.sinh(events["muons"]["eta"])
+\end{minted}
+\end{uncoverenv}
+
+\begin{uncoverenv}<4->
+\scriptsize
+\begin{minted}{python}
 >>> events["muons"][0].tolist()
 [{"pt": 31.1, "phi": -0.481, "eta": 0.882, "pz": 31.128},
  {"pt": 9.76, "phi": -0.123, "eta": 0.924, "pz": 10.358},
@@ -285,14 +291,16 @@ awkward-array is a library in development to manipulate such structure like Nump
 \begin{frame}[fragile]{Manipulating columnar data}
 \vspace{0.5 cm}
 
-awkward-array is a suite of \textcolor{darkblue}{composable}, high-level array types:
+\underline{awkward-array is a suite of \textcolor{darkorange}{\bf composable}, high-level array types:}
+
+\vspace{0.2 cm}
 \begin{itemize}
 \item \textcolor{darkblue}{jagged arrays:} for lists of lists of lists of lists\ldots
 \item \textcolor{darkblue}{tables:} for sets of objects (may be jagged if composed with JaggedArray)
 \item \textcolor{darkblue}{chunked:} for data that are not completely contiguous (i.e.\ ROOT baskets)
-\item \textcolor{darkblue}{indexed:} for pointers, cross-references, dictionary-encoding, and event lists
+\item \textcolor{darkblue}{indexed:} for pointers, cross-references, dictionary-encoding, event lists, trees\ldots
 \item \textcolor{darkblue}{masked:} for missing data (especially Apache Arrow bitmasks)
-\item \textcolor{darkblue}{virtual:} for selective reading, e.g.\ only a few branches of a ROOT file
+\item \textcolor{darkblue}{virtual:} for read-on-demand, e.g.\ only a few branches of a ROOT file
 \item \textcolor{darkblue}{unions:} for polymorphism
 \end{itemize}
 
@@ -328,7 +336,7 @@ vectorized algorithms to replace for-loop manipulations.
 >>> # apply cuts with Numpy-like masks:
 >>> events_with_two = events["muons"][events["muons"].counts >= 2]
 
->>> # explode to event-wise pairs of muons:
+>>> # explode to event-wise pairs of muons (using only SIMD operations):
 >>> pairs = events_with_two.pairs()
 >>> pairs
 <JaggedArray [[<Pair 0> <Pair 1> <Pair 2>] [<Pair 3>]] at 0x7fd394033080>
@@ -394,6 +402,22 @@ def run(pz, events):
 \end{frame}
 
 \begin{frame}{What does all of this buy us?}
+\vspace{0.5 cm}
+Analyze the same data (events containing muons with pt, eta, and phi) in many ways:
+\begin{itemize}
+\item uproot $\to$ JaggedArray of Table
+\item root\_numpy $\to$ array of arrays
+\item C++ {\tt\small std::vector<std::vector<struct>>} (non-columnar, but efficient)
+\item Python list of lists of dicts
+\item Python list of lists of class objects (using {\tt\small \_\_slots\_\_} for efficiency)
+\item ROOT TBranch::GetEntry, TTreeReader, RDataFrame (all in C++), PyROOT
+\end{itemize}
+
+\vspace{0.5 cm}
+\textcolor{red}{Memory use and time to compute {\tt\small pz = pt*sinh(eta)} require logarithmic scales\ldots}
+\end{frame}
+
+\begin{frame}{What does all of this buy us?}
 \vspace{0.3 cm}
 \begin{columns}
 \column{1.15\linewidth}
@@ -450,7 +474,7 @@ def run(pz, events):
  0.030 & \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} \\
  0.023 & \textcolor{mycolor}{JaggedArray compute in Numba-accelerated Python for loops} \\
 & \\
-& \textcolor{gray}{\scriptsize all with warmed disk cache} \\
+& \textcolor{gray}{\scriptsize all with warmed disk cache in the same environment} \\
 \end{tabular}
 \end{columns}
 \end{columns}
@@ -461,9 +485,9 @@ def run(pz, events):
 \large
 \begin{itemize}\setlength{\itemsep}{0.5 cm}
 \item Python has a model for expressing operations on columnar data: Numpy.
-\item We must extend that model for the variable-length structures that are ubiquitous in HEP data.
-\item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching in vectorized instructions?
-\item Can hold more data in memory at a time than non-columnar C++ structures and process it faster, without leaving Python.
+\item We have to extend that model to handle the variable-length structures that are ubiquitous in HEP data.
+\item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching using vectorized instructions? \textcolor{gray}{(Part of Jaydeep's project.)}
+\item Can hold more data in memory at a time than non-columnar C++ structures and process it faster, all with Pythonic syntax.
 \end{itemize}
 \end{frame}
 
@@ -762,3 +786,4 @@ gettimeofday(&endtime, 0);
 \end{frame}
 
 \end{document}
+
