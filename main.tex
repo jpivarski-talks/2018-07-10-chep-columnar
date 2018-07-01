@@ -313,7 +313,7 @@ The data model is very flexible, but the data are strictly columnar:
 \hfill \includegraphics[height=3 cm]{jaydeep.jpg}
 
 \vspace{-3 cm}
-Jaydeep Nandi, our Google Summer of Code student, is investigating \\
+\textcolor{darkblue}{Jaydeep Nandi}, our Google Summer of Code student, is investigating \\
 vectorized algorithms to replace for-loop manipulations.
 
 \vspace{0.1 cm}
@@ -455,302 +455,307 @@ def run(pz, events):
 
 \begin{frame}{Conclusions}
 \vspace{0.5 cm}
-
-
+\large
+\begin{itemize}\setlength{\itemsep}{0.5 cm}
+\item Python has a model for expressing operations on columnar data: Numpy.
+\item We must extend that model for the variable-length structures that are ubiquitous in HEP data.
+\item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching in vectorized instructions?
+\item Can hold more data in memory at a time than non-columnar C++ structures and process it faster, without leaving Python.
+\end{itemize}
 \end{frame}
 
-%% \begin{frame}
-%% \huge
-%% \begin{center}
-%% \textcolor{darkblue}{Backup}
-%% \end{center}
-%% \end{frame}
+\begin{frame}
+\huge
+\begin{center}
+\textcolor{darkblue}{Backup}
+\end{center}
+\end{frame}
 
-%% \begin{frame}[fragile]{JaggedArray compute in Python for loops}
-%% \vspace{0.3 cm}
-%% \scriptsize
-%% \begin{minted}{python}
-%% %%timeit
-%% k = 0
-%% for event in events:
-%%     for muon in event:
-%%         pz[k] = muon.pt * math.sinh(muon.eta)
-%%         k += 1
-%% \end{minted}
+\begin{frame}[fragile]{JaggedArray compute in Python for loops}
+\vspace{0.3 cm}
+\scriptsize
+\begin{minted}{python}
+%%timeit
+k = 0
+for event in events:
+    for muon in event:
+        pz[k] = muon.pt * math.sinh(muon.eta)
+        k += 1
+\end{minted}
 
-%% \vspace{0.5 cm}
-%% \hfill\begin{minipage}{0.6\linewidth}
-%% {\normalsize \ldots with Numba acceleration:}
-%% \begin{minted}{python}
-%% import numba
+\vspace{0.5 cm}
+\hfill\begin{minipage}{0.6\linewidth}
+{\normalsize \ldots with Numba acceleration:}
+\begin{minted}{python}
+import numba
 
-%% @numpy.jit
-%% def callme(pz, events):
-%%     k = 0
-%%     for event in events:
-%%         for muon in event:
-%%             pz[k] = muon.pt * math.sinh(muon.eta)
-%%             k += 1
+@numpy.jit
+def callme(pz, events):
+    k = 0
+    for event in events:
+        for muon in event:
+            pz[k] = muon.pt * math.sinh(muon.eta)
+            k += 1
 
-%% %%timeit
-%% callme(pz, events)
-%% \end{minted}
-%% \end{minipage}
-%% \end{frame}
+%%timeit
+callme(pz, events)
+\end{minted}
+\end{minipage}
+\end{frame}
 
-%% \begin{frame}[fragile]{JaggedArray and root\_numpy ufuncs}
-%% \scriptsize
-%% {\normalsize JaggedArray compute as Numpy-like ufunc:}
-%% \begin{minted}{python}
-%% import numpy
+\begin{frame}[fragile]{JaggedArray and root\_numpy ufuncs}
+\scriptsize
+{\normalsize JaggedArray compute as Numpy-like ufunc:}
+\begin{minted}{python}
+import numpy
 
-%% %%timeit
-%% pz = events["pt"] * numpy.sinh(events["eta"])
-%% \end{minted}
+%%timeit
+pz = events["pt"] * numpy.sinh(events["eta"])
+\end{minted}
 
-%% \vspace{0.5 cm}
-%% \hfill\begin{minipage}{0.6\linewidth}
-%% {\normalsize root\_numpy compute in loop over ufuncs:}
-%% \begin{minted}{python}
-%% %%timeit
-%% k = 0
-%% for event in events:
-%%     pt = event["Muon_pt"]
-%%     eta = event["Muon_eta"]
-%%     pz[k : k + len(pt)] = pt * numpy.sinh(eta)
-%%     k += len(pt)
-%% \end{minted}
-%% \end{minipage}
-%% \end{frame}
+\vspace{0.5 cm}
+\hfill\begin{minipage}{0.6\linewidth}
+{\normalsize root\_numpy compute in loop over ufuncs:}
+\begin{minted}{python}
+%%timeit
+k = 0
+for event in events:
+    pt = event["Muon_pt"]
+    eta = event["Muon_eta"]
+    pz[k : k + len(pt)] = pt * numpy.sinh(eta)
+    k += len(pt)
+\end{minted}
+\end{minipage}
+\end{frame}
 
-%% \begin{frame}[fragile]{Python list of lists of dicts/classes compute in Python for loops}
-%% \scriptsize
-%% \begin{columns}[t]
-%% \column{0.5\linewidth}
-%% \begin{minted}{python}
-%% from math import sinh
+\begin{frame}[fragile]{Python list of lists of dicts/classes compute in Python for loops}
+\scriptsize
+\begin{columns}[t]
+\column{0.5\linewidth}
+\begin{minted}{python}
+from math import sinh
 
-%% events = [
-%%     [],
-%%     [{"pt": 129.8,
-%%       "eta": -1.006,
-%%       "phi": -0.581},
-%%      {"pt": 73.08,
-%%       "eta": -0.719,
-%%       "phi": -1.51}],
-%%     ...
-%%     ]
+events = [
+    [],
+    [{"pt": 129.8,
+      "eta": -1.006,
+      "phi": -0.581},
+     {"pt": 73.08,
+      "eta": -0.719,
+      "phi": -1.51}],
+    ...
+    ]
 
-%% %%timeit
-%% k = 0
-%% for event in events:
-%%     for muon in event:
-%%         pz[k] = (muon["pt"] *
-%%                  sinh(muon["eta"]))
-%%         k += 1
-%% \end{minted}
+%%timeit
+k = 0
+for event in events:
+    for muon in event:
+        pz[k] = (muon["pt"] *
+                 sinh(muon["eta"]))
+        k += 1
+\end{minted}
 
-%% \column{0.5\linewidth}
-%% \begin{minted}{python}
-%% class Muon(object):
-%%     __slots__ = ["pt", "eta", "phi"]
-%%     def __init__(self, pt, eta, phi):
-%%         self.pt = pt
-%%         self.eta = eta
-%%         self.phi = phi
+\column{0.5\linewidth}
+\begin{minted}{python}
+class Muon(object):
+    __slots__ = ["pt", "eta", "phi"]
+    def __init__(self, pt, eta, phi):
+        self.pt = pt
+        self.eta = eta
+        self.phi = phi
 
-%% events = [
-%%     [],
-%%     [Muon(129.8, -1.006, -0.581),
-%%      Muon(73.08, -0.719, -1.51)],
-%%     ...
-%%     ]
+events = [
+    [],
+    [Muon(129.8, -1.006, -0.581),
+     Muon(73.08, -0.719, -1.51)],
+    ...
+    ]
 
-%% %%timeit
-%% k = 0
-%% for event in asobjs:
-%%     for muon in event:
-%%         pz[k] = (muon.pt *
-%%                  sinh(muon.eta))
-%%         k += 1
-%% \end{minted}
-%% \end{columns}
-%% \end{frame}
+%%timeit
+k = 0
+for event in asobjs:
+    for muon in event:
+        pz[k] = (muon.pt *
+                 sinh(muon.eta))
+        k += 1
+\end{minted}
+\end{columns}
+\end{frame}
 
-%% \begin{frame}[fragile]{root\_numpy load and uproot load}
-%% \scriptsize
-%% \begin{minted}{python}
-%% import ROOT
-%% import root_numpy
+\begin{frame}[fragile]{root\_numpy load and uproot load}
+\scriptsize
+\begin{minted}{python}
+import ROOT
+import root_numpy
 
-%% file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
-%% tree = file.Get("tree")
+file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
+tree = file.Get("tree")
 
-%% %%timeit
-%% root_numpy.tree2array(tree, ["Muon_pt", "Muon_eta", "Muon_phi"])
-
-
+%%timeit
+root_numpy.tree2array(tree, ["Muon_pt", "Muon_eta", "Muon_phi"])
 
 
-%% import uproot
-%% tree = uproot.open("NanoAOD-DYJetsToLL.root")["tree"]
 
-%% %%timeit
-%% pt, eta, phi = tree.arrays(["Muon_pt", "Muon_eta", "Muon_phi"], outputtype=tuple)
-%% \end{minted}
-%% \end{frame}
 
-%% \begin{frame}[fragile]{PyROOT load and compute}
-%% \scriptsize
-%% \begin{minted}{python}
-%% import math
-%% import numpy
-%% import ROOT
+import uproot
+tree = uproot.open("NanoAOD-DYJetsToLL.root")["tree"]
 
-%% file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
-%% tree = file.Get("tree")
+%%timeit
+pt, eta, phi = tree.arrays(["Muon_pt", "Muon_eta", "Muon_phi"], outputtype=tuple)
+\end{minted}
+\end{frame}
 
-%% tree.SetBranchStatus("*", 0)
-%% tree.SetBranchStatus("nMuon", 1)
-%% tree.SetBranchStatus("Muon_pt", 1)
-%% tree.SetBranchStatus("Muon_eta", 1)
+\begin{frame}[fragile]{PyROOT load and compute}
+\scriptsize
+\begin{minted}{python}
+import math
+import numpy
+import ROOT
 
-%% pz = numpy.empty(552056, dtype=numpy.float32)
+file = ROOT.TFile("NanoAOD-DYJetsToLL.root")
+tree = file.Get("tree")
 
-%% %%timeit
-%% k = 0
-%% for event in tree:
-%%     for pt, eta in zip(event.Muon_pt, event.Muon_eta):
-%%         pz[k] = pt * math.sinh(eta)
-%%         k += 1
-%% \end{minted}
-%% \end{frame}
+tree.SetBranchStatus("*", 0)
+tree.SetBranchStatus("nMuon", 1)
+tree.SetBranchStatus("Muon_pt", 1)
+tree.SetBranchStatus("Muon_eta", 1)
 
-%% \begin{frame}[fragile]{ROOT RDataFrame load and compute}
-%% \vspace{0.1 cm}
-%% \scriptsize
-%% \begin{columns}
-%% \column{1.05\linewidth}
-%% \begin{minted}{c++}
-%% #include <ctime>
-%% #include <sys/time.h>
-%% struct timeval starttime, endtime;
+pz = numpy.empty(552056, dtype=numpy.float32)
 
-%% auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
-%% ROOT::RDataFrame rdf("tree", file);
+%%timeit
+k = 0
+for event in tree:
+    for pt, eta in zip(event.Muon_pt, event.Muon_eta):
+        pz[k] = pt * math.sinh(eta)
+        k += 1
+\end{minted}
+\end{frame}
 
-%% TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
-%% tree->SetBranchStatus("*", 0);
-%% tree->SetBranchStatus("nMuon", 1);
-%% tree->SetBranchStatus("Muon_pt", 1);
-%% tree->SetBranchStatus("Muon_eta", 1);
+\begin{frame}[fragile]{ROOT RDataFrame load and compute}
+\vspace{0.1 cm}
+\scriptsize
+\begin{columns}
+\column{1.05\linewidth}
+\begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
 
-%% float pz[552056];
-%% gettimeofday(&starttime, 0);
-%% int k = 0;
-%% rdf.Foreach([&k](ROOT::VecOps::RVec<float> Muon_pt, ROOT::VecOps::RVec<float> Muon_eta) {
-%%     for (int i = 0;  i < Muon_pt.size();  i++) {
-%%         pz[k]= Muon_pt[i] * sinh(Muon_eta[i]);
-%%         k++;
-%%     }
-%% }, {"Muon_pt", "Muon_eta"});
-%% gettimeofday(&endtime, 0);
-%% \end{minted}
-%% \end{columns}
-%% \end{frame}
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+ROOT::RDataFrame rdf("tree", file);
 
-%% \begin{frame}[fragile]{ROOT TTreeReader load and compute}
-%% \scriptsize
-%% \begin{columns}
-%% \column{1.05\linewidth}
-%% \begin{minted}{c++}
-%% #include <ctime>
-%% #include <sys/time.h>
-%% struct timeval starttime, endtime;
+TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
+tree->SetBranchStatus("*", 0);
+tree->SetBranchStatus("nMuon", 1);
+tree->SetBranchStatus("Muon_pt", 1);
+tree->SetBranchStatus("Muon_eta", 1);
 
-%% auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
-%% TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
-%% tree->SetBranchStatus("*", 0);
-%% tree->SetBranchStatus("nMuon", 1);
-%% tree->SetBranchStatus("Muon_pt", 1);
-%% tree->SetBranchStatus("Muon_eta", 1);
+float pz[552056];
+gettimeofday(&starttime, 0);
+int k = 0;
+rdf.Foreach([&k](ROOT::VecOps::RVec<float> Muon_pt, ROOT::VecOps::RVec<float> Muon_eta) {
+    for (int i = 0;  i < Muon_pt.size();  i++) {
+        pz[k]= Muon_pt[i] * sinh(Muon_eta[i]);
+        k++;
+    }
+}, {"Muon_pt", "Muon_eta"});
+gettimeofday(&endtime, 0);
+\end{minted}
+\end{columns}
+\end{frame}
 
-%% TTreeReader reader("tree", file);
-%% TTreeReaderArray<float> pt(reader, "Muon_pt");
-%% TTreeReaderArray<float> eta(reader, "Muon_eta");
+\begin{frame}[fragile]{ROOT TTreeReader load and compute}
+\scriptsize
+\begin{columns}
+\column{1.05\linewidth}
+\begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
 
-%% gettimeofday(&starttime, 0);
-%% int k = 0;
-%% while (reader.Next()) {
-%%     for (int i = 0;  i < pt.GetSize();  i++) {
-%%         pz[k] = pt[i] * sinh(eta[i]);
-%%         k++;
-%%     }
-%% }
-%% gettimeofday(&endtime, 0);
-%% \end{minted}
-%% \end{columns}
-%% \end{frame}
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
+tree->SetBranchStatus("*", 0);
+tree->SetBranchStatus("nMuon", 1);
+tree->SetBranchStatus("Muon_pt", 1);
+tree->SetBranchStatus("Muon_eta", 1);
 
-%% \begin{frame}[fragile]{ROOT TBranch::GetEntry load and compute}
-%% \vspace{0.2 cm}
-%% \scriptsize
-%% \begin{columns}
-%% \column{1.1\linewidth}
-%% \begin{minted}{c++}
-%% #include <ctime>
-%% #include <sys/time.h>
-%% struct timeval starttime, endtime;
+TTreeReader reader("tree", file);
+TTreeReaderArray<float> pt(reader, "Muon_pt");
+TTreeReaderArray<float> eta(reader, "Muon_eta");
 
-%% auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
-%% TTree* tree; file->GetObject("tree", tree);
+gettimeofday(&starttime, 0);
+int k = 0;
+while (reader.Next()) {
+    for (int i = 0;  i < pt.GetSize();  i++) {
+        pz[k] = pt[i] * sinh(eta[i]);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
+\end{minted}
+\end{columns}
+\end{frame}
 
-%% UInt_t nMuon; float pts[10]; float etas[10];
-%% TBranch* nbranch = tree->GetBranch("nMuon");       tree->SetBranchAddress("nMuon", &nMuon);
-%% TBranch* ptbranch = tree->GetBranch("Muon_pt");    tree->SetBranchAddress("Muon_pt", pts);
-%% TBranch* etabranch = tree->GetBranch("Muon_eta");  tree->SetBranchAddress("Muon_eta", etas);
+\begin{frame}[fragile]{ROOT TBranch::GetEntry load and compute}
+\vspace{0.2 cm}
+\scriptsize
+\begin{columns}
+\column{1.1\linewidth}
+\begin{minted}{c++}
+#include <ctime>
+#include <sys/time.h>
+struct timeval starttime, endtime;
 
-%% gettimeofday(&starttime, 0);
-%% int k = 0;
-%% for (int i = 0;  i < 701716;  i++) {
-%%     // TBranch::GetEntry, rather than TTree::GetEntry, avoids a loop over branches
-%%     nbranch->GetEntry(i);    ptbranch->GetEntry(i);    etabranch->GetEntry(i);
-%%     for (int j = 0;  j < nMuon;  j++) {
-%%         pz[k] = pts[j] * sinh(etas[j]);
-%%         k++;
-%%     }
-%% }
-%% gettimeofday(&endtime, 0);
-%% \end{minted}
-%% \end{columns}
-%% \end{frame}
+auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
+TTree* tree; file->GetObject("tree", tree);
 
-%% \begin{frame}[fragile]{{\tt std::vector<std::vector<struct>>}}
-%% \vspace{0.3 cm}
-%% \scriptsize
-%% \begin{minted}{c++}
-%% struct Muon {
-%%     float pt;
-%%     float eta;
-%%     float phi;
-%% };
+UInt_t nMuon; float pts[10]; float etas[10];
+TBranch* nbranch = tree->GetBranch("nMuon");       tree->SetBranchAddress("nMuon", &nMuon);
+TBranch* ptbranch = tree->GetBranch("Muon_pt");    tree->SetBranchAddress("Muon_pt", pts);
+TBranch* etabranch = tree->GetBranch("Muon_eta");  tree->SetBranchAddress("Muon_eta", etas);
 
-%% struct Event {
-%%     std::vector<Muon> muons;
-%% };
+gettimeofday(&starttime, 0);
+int k = 0;
+for (int i = 0;  i < 701716;  i++) {
+    // TBranch::GetEntry, rather than TTree::GetEntry, avoids a loop over branches
+    nbranch->GetEntry(i);    ptbranch->GetEntry(i);    etabranch->GetEntry(i);
+    for (int j = 0;  j < nMuon;  j++) {
+        pz[k] = pts[j] * sinh(etas[j]);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
+\end{minted}
+\end{columns}
+\end{frame}
 
-%% auto events = // std::vector<std::vector<Muon>>, filled with push_back
+\begin{frame}[fragile]{{\tt std::vector<std::vector<struct>>}}
+\vspace{0.3 cm}
+\scriptsize
+\begin{minted}{c++}
+struct Muon {
+    float pt;
+    float eta;
+    float phi;
+};
 
-%% gettimeofday(&starttime, 0);
-%% int k = 0;
-%% for (int i = 0;  i < events.size();  i++) {
-%%     for (int j = 0;  j < events[i].muons.size();  j++) {
-%%         pz[k] = events[i].muons[j].pt * sinh(events[i].muons[j].eta);
-%%         k++;
-%%     }
-%% }
-%% gettimeofday(&endtime, 0);
-%% \end{minted}
-%% \end{frame}
+struct Event {
+    std::vector<Muon> muons;
+};
+
+auto events = // std::vector<std::vector<Muon>>, filled with push_back
+
+gettimeofday(&starttime, 0);
+int k = 0;
+for (int i = 0;  i < events.size();  i++) {
+    for (int j = 0;  j < events[i].muons.size();  j++) {
+        pz[k] = events[i].muons[j].pt * sinh(events[i].muons[j].eta);
+        k++;
+    }
+}
+gettimeofday(&endtime, 0);
+\end{minted}
+\end{frame}
 
 \end{document}
