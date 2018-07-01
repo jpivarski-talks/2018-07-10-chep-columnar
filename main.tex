@@ -97,7 +97,7 @@ From Hennessy \& Patterson, {\it Computer Architecture, A~Quantitative Approach.
 
 \begin{frame}[fragile]{Motivation}
 \vspace{0.2 cm}
-Columnar data representations get particularly complex for hierarchically nested data.
+Columnar data representations are particularly complex for hierarchically nested data.
 
 \vspace{0.25 cm}
 \begin{columns}
@@ -114,15 +114,19 @@ Columnar data representations get particularly complex for hierarchically nested
 \end{columns}
 
 \vspace{0.25 cm}
+\begin{uncoverenv}<2->
 \scriptsize
 \begin{Verbatim}[commandchars=\\\{\}]
 [[Muon(\textcolor{darkgreen}{31.1}, \textcolor{darkorange}{-0.481}, \textcolor{blue}{0.882}), Muon(\textcolor{darkgreen}{9.76}, \textcolor{darkorange}{-0.124}, \textcolor{blue}{0.924}), Muon(\textcolor{darkgreen}{8.18}, \textcolor{darkorange}{-0.119}, \textcolor{blue}{0.923})],
  [Muon(\textcolor{darkgreen}{5.27}, \textcolor{darkorange}{1.246}, \textcolor{blue}{-0.991})],
  [Muon(\textcolor{darkgreen}{4.72}, \textcolor{darkorange}{-0.207}, \textcolor{blue}{0.953})],
- [Muon(\textcolor{darkgreen}{8.59}, \textcolor{darkorange}{-1.754}, \textcolor{blue}{-0.264}), Muon(\textcolor{darkgreen}{8.714}, \textcolor{darkorange}{0.185}, \textcolor{blue}{0.629})],
- ...
+ [Muon(\textcolor{darkgreen}{8.59}, \textcolor{darkorange}{-1.754}, \textcolor{blue}{-0.264}), Muon(\textcolor{darkgreen}{8.714}, \textcolor{darkorange}{0.185}, \textcolor{blue}{0.629})], ...
 \end{Verbatim}
+\end{uncoverenv}
 
+\vspace{0.25 cm}
+\begin{uncoverenv}<3->
+\scriptsize
 {\normalsize becomes four contiguous arrays:}
 
 \vspace{0.25 cm}
@@ -132,6 +136,7 @@ Columnar data representations get particularly complex for hierarchically nested
 \small phi &  \textcolor{darkorange}{\tt\scriptsize -0.481,\ -0.123,\ -0.119,\ \ 1.246,\ -0.207,\ -1.754,\ 0.185} \\
 \small eta &        \textcolor{blue}{\tt\scriptsize \ 0.882,\ \ 0.924,\ \ 0.923,\ -0.991,\ \ 0.953,\ -0.264,\ 0.629} \\
 \end{tabular}
+\end{uncoverenv}
 \end{frame}
 
 \begin{frame}{This talk will be about:}
@@ -147,6 +152,55 @@ Columnar data representations get particularly complex for hierarchically nested
 \textcolor{darkblue}{Convenient syntax for analysis scripts}
 \end{center}
 \end{frame}
+
+\begin{frame}[fragile]{Reading columnar data}
+\vspace{0.5 cm}
+The ROOT file format stores data in columns, but ROOT reads them back as C++ objects. If you want arrays for columnar data processing, you have to undo that step.
+
+\vspace{0.5 cm}
+\begin{uncoverenv}<2->
+\hfill \includegraphics[height=2 cm]{uproot-logo.pdf}
+
+\vspace{-2 cm}
+uproot, an implementation of ROOT I/O in Python$+$Numpy, \\
+reads TTree branches directly into Numpy arrays.
+\end{uncoverenv}
+
+\vspace{0.25 cm}
+\begin{uncoverenv}<3->
+\scriptsize
+\begin{minted}{python}
+>>> import uproot
+>>> tree = uproot.open("NanoAOD-DYJetsToLL.root")["Events"]
+>>> tree.array("Jet_pt")
+jaggedarray([[],
+             [29.96875   21.3125    19.671875  17.046875  15.4453125],
+             [41.46875  27.625    22.       18.734375],
+             ...,
+             [34.03125  18.828125 18.359375],
+             [42.78125   18.640625  17.640625  16.734375  15.921875  15.7890625],
+             [23.75     23.640625 18.96875  ... 16.78125 16.28125 16.25   ]])
+\end{minted}
+
+\small
+\vspace{0.1 cm}
+Branches with nested structure, like {\tt\scriptsize std::vector<float>}, are read as columnar JaggedArrays.
+\end{uncoverenv}
+\end{frame}
+
+\begin{frame}{Reading columnar data}
+\vspace{0.5 cm}
+Despite the fact that uproot is pure Python, throughput can exceed ROOT (C++) and root\_numpy (Cython) for baskets $\gtrsim$~20~kB.
+
+\vspace{0.25 cm}
+\includegraphics[width=0.5\linewidth]{root-none-muon.png}\includegraphics[width=0.5\linewidth]{rootnumpy-none-muon.png}
+
+\vspace{0.5 cm}
+This is because it is merely casting basket bytes as arrays.
+\end{frame}
+
+
+
 
 \begin{frame}{Landscape of vertical performance}
 \vspace{0.3 cm}
