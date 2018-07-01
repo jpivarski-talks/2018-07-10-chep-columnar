@@ -390,7 +390,7 @@ def run(pz, events):
 \scriptsize
 \begin{minted}{python}
 import numba
-@numpy.jit
+@numba.jit
 def run(pz, events):
   k = 0
   for event in events:
@@ -528,7 +528,7 @@ for event in events:
 \begin{minted}{python}
 import numba
 
-@numpy.jit
+@numba.jit
 def callme(pz, events):
     k = 0
     for event in events:
