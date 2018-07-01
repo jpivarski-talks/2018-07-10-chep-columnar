@@ -399,23 +399,21 @@ def run(pz, events):
 \end{columns}
 \end{frame}
 
-\begin{frame}{What does all of this buy us?}
-\vspace{0.5 cm}
-Analyze the same data (events containing muons with pt, eta, and phi) in many ways:
-\begin{itemize}
-\item uproot $\to$ JaggedArray of Table
-\item root\_numpy $\to$ array of arrays
-\item C++ {\tt\small std::vector<std::vector<struct>>} (non-columnar, but efficient)
-\item Python list of lists of dicts
-\item Python list of lists of class objects (using {\tt\small \_\_slots\_\_} for efficiency)
-\item ROOT TBranch::GetEntry, TTreeReader, RDataFrame (all in C++), PyROOT
-\end{itemize}
+\begin{frame}{What does columnar data buy us?}
+\begin{center}
+\includegraphics[width=0.45\linewidth]{quantify.jpg}
+\end{center}
 
-\vspace{0.5 cm}
-\textcolor{red}{Memory use and time to compute {\tt\small pz = pt*sinh(eta)} require logarithmic scales\ldots}
+\vspace{0.1 cm}
+\textcolor{darkblue}{One simple scenario, many frameworks:}
+\begin{enumerate}
+\item Load events containing arbitrarily many muons with \{pt, eta, phi\} as float32.
+\item Compute {\tt\small pz = pt*sinh(eta)} for all muons in all events.
+\item Plot on log scale.
+\end{enumerate}
 \end{frame}
 
-\begin{frame}{What does all of this buy us?}
+\begin{frame}{What does columnar data buy us?}
 \vspace{0.3 cm}
 \begin{columns}
 \column{1.15\linewidth}
@@ -423,7 +421,7 @@ Analyze the same data (events containing muons with pt, eta, and phi) in many wa
 \end{columns}
 \end{frame}
 
-\begin{frame}{What does all of this buy us?}
+\begin{frame}{What does columnar data buy us?}
 \vspace{0.5 cm}
 \scriptsize
 
