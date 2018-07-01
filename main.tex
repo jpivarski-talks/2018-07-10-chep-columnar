@@ -38,8 +38,9 @@
 \definecolor{pythoncolor}{HTML}{FF00CC}
 
 \title[2018-07-10-chep-columnar]{Columnar data processing for HEP analysis}
-\author{Jim Pivarski}
-\institute{Princeton University -- DIANA-HEP}
+
+\author[shortname]{Peter Elmer\inst{a} \and \textcolor{darkblue}{Jim Pivarski}\inst{a} \and David Lange\inst{a} \and Jaydeep Nandi\inst{b}}
+\institute[shortinst]{\inst{a} Princeton University \and \inst{b} National Institute of Technology, Silchar, India}
 \date{July 10, 2018}
 
 \begin{document}
@@ -127,7 +128,7 @@ Columnar data representations are particularly complex for hierarchically nested
 \vspace{0.25 cm}
 \begin{uncoverenv}<3->
 \scriptsize
-{\normalsize becomes four contiguous arrays:}
+{\normalsize becomes four contiguous arrays, with ``offsets'' to express nesting structure:}
 
 \vspace{0.25 cm}
 \begin{tabular}{r l}
@@ -139,7 +140,7 @@ Columnar data representations are particularly complex for hierarchically nested
 \end{uncoverenv}
 \end{frame}
 
-\begin{frame}{This talk will be about:}
+\begin{frame}{This talk will be about}
 \vspace{0.5 cm}
 \Large
 \begin{center}
@@ -192,10 +193,19 @@ Branches with nested structure, like {\tt\scriptsize std::vector<float>}, are re
 \vspace{0.5 cm}
 Despite the fact that uproot is pure Python, throughput can exceed ROOT (C++) and root\_numpy (Cython) for baskets $\gtrsim$~20~kB.
 
-\vspace{0.25 cm}
+\vspace{0.5 cm}
+\begin{columns}
+\column{0.5\linewidth}
+\small
+\mbox{ } \hfill \hfill speedup vs.\ ROOT \hfill \mbox{ }
+\column{0.5\linewidth}
+\small
+\mbox{ } \hfill speedup vs.\ root\_numpy \hfill \hfill \mbox{ }
+\end{columns}
+
 \includegraphics[width=0.5\linewidth]{root-none-muon.png}\includegraphics[width=0.5\linewidth]{rootnumpy-none-muon.png}
 
-\vspace{0.5 cm}
+\vspace{0.25 cm}
 This is because uproot is doing less work; only casting basket bytes as arrays.
 \end{frame}
 
@@ -231,7 +241,7 @@ histbook provides array-at-a-time histogramming.
 \hfill \includegraphics[height=2 cm]{awkward-logo.pdf}
 
 \vspace{-2 cm}
-The real problem, though, is doing {\it an analysis} on \\
+The real problem, though, is {\it doing an analysis} on \\
 columnar data. JaggedArrays are awkward:
 
 \scriptsize
@@ -265,6 +275,34 @@ awkward-array is a library in development to manipulate such structure like Nump
 [{"pt": 31.1, "phi": -0.481, "eta": 0.882, "pz": 31.128},
  {"pt": 9.76, "phi": -0.123, "eta": 0.924, "pz": 10.358},
  {"pt": 8.18, "phi": -0.119, "eta": 0.923, "pz": 8.669}]
+\end{minted}
+\end{uncoverenv}
+\end{frame}
+
+\begin{frame}[fragile]{Manipulating columnar data}
+\vspace{0.5 cm}
+
+awkward-array is a suite of \textcolor{darkblue}{composable}, high-level array types:
+\begin{itemize}
+\item \textcolor{darkblue}{jagged arrays:} for lists of lists of lists of lists\ldots
+\item \textcolor{darkblue}{tables:} for sets of objects (may be jagged if composed with JaggedArray)
+\item \textcolor{darkblue}{chunked:} for data that are not completely contiguous (i.e.\ ROOT baskets)
+\item \textcolor{darkblue}{indexed:} for pointers, cross-references, dictionary-encoding, and event lists
+\item \textcolor{darkblue}{masked:} for missing data (especially Apache Arrow bitmasks)
+\item \textcolor{darkblue}{virtual:} for selective reading, e.g.\ only a few branches of a ROOT file
+\item \textcolor{darkblue}{unions:} for polymorphism
+\end{itemize}
+
+\vspace{0.5 cm}
+\begin{uncoverenv}<2->
+The data model is very flexible, but the data are strictly columnar:
+
+\scriptsize
+\begin{minted}{python}
+>>> import awkward
+>>> columnar_data = awkward.fromiter([1, 2, 3.3, None, [4, 5], {"six": 6}])
+>>> columnar_data.tolist()
+[1.0, 2.0, 3.3, None, [4, 5], {'six': 6}]
 \end{minted}
 \end{uncoverenv}
 \end{frame}
@@ -413,6 +451,12 @@ def run(pz, events):
 \end{tabular}
 \end{columns}
 \end{columns}
+\end{frame}
+
+\begin{frame}{Conclusions}
+\vspace{0.5 cm}
+
+
 \end{frame}
 
 %% \begin{frame}
