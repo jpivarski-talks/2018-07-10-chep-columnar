@@ -485,10 +485,22 @@ Analyze the same data (events containing muons with pt, eta, and phi) in many wa
 \large
 \begin{itemize}\setlength{\itemsep}{0.5 cm}
 \item Python has a model for expressing operations on columnar data: Numpy.
-\item We have to extend that model to handle the variable-length structures that are ubiquitous in HEP data.
+\item That model has to be extended to handle the variable-length structures that are ubiquitous in HEP data.
 \item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching using vectorized instructions? \textcolor{gray}{(Part of Jaydeep's project.)}
 \item Can hold more data in memory at a time than non-columnar C++ structures and process it faster, all with Pythonic syntax.
 \end{itemize}
+
+\vspace{0.25 cm}
+\begin{center}
+\begin{minipage}{0.67\linewidth}
+\small
+\textcolor{blue}{\url{https://github.com/scikit-hep/uproot}}
+
+\textcolor{blue}{\url{https://github.com/scikit-hep/histbook}}
+
+\textcolor{blue}{\url{https://github.com/scikit-hep/awkward-array}}
+\end{minipage}
+\end{center}
 \end{frame}
 
 \begin{frame}
