@@ -97,19 +97,21 @@ From Hennessy \& Patterson, {\it Computer Architecture, A~Quantitative Approach.
 \end{frame}
 
 \begin{frame}[fragile]{Motivation}
-\vspace{0.2 cm}
+\vspace{0.5 cm}
+\begin{columns}
+\column{1.05\linewidth}
 Columnar data representations are particularly complex for hierarchically nested data.
 
 \vspace{0.25 cm}
 \begin{columns}
 \column{0.2\linewidth}
-\column{0.3\linewidth}
+\column{0.26\linewidth}
 \includegraphics[width=\linewidth]{muons-as-objects.png}
 
 \column{0.05\linewidth}
 \centering vs
 
-\column{0.3\linewidth}
+\column{0.26\linewidth}
 \includegraphics[width=\linewidth]{muons-as-a-table.png}
 \column{0.2\linewidth}
 \end{columns}
@@ -128,7 +130,7 @@ Columnar data representations are particularly complex for hierarchically nested
 \vspace{0.25 cm}
 \begin{uncoverenv}<3->
 \scriptsize
-{\normalsize becomes four contiguous arrays, with ``offsets'' to express nesting structure:}
+{\normalsize becomes four contiguous arrays; need an array of offsets to express the ``jagged'' structure:}
 
 \vspace{0.25 cm}
 \begin{tabular}{r l}
@@ -138,6 +140,7 @@ Columnar data representations are particularly complex for hierarchically nested
 \small eta &        \textcolor{blue}{\tt\scriptsize \ 0.882,\ \ 0.924,\ \ 0.923,\ -0.991,\ \ 0.953,\ -0.264,\ 0.629} \\
 \end{tabular}
 \end{uncoverenv}
+\end{columns}
 \end{frame}
 
 \begin{frame}{This talk will be about}
