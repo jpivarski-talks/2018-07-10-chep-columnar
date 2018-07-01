@@ -255,11 +255,11 @@ columnar data. JaggedArrays are awkward:
 \end{minted}
 
 \normalsize
-especially if you want view all muon attributes collectively as an object (a jagged table).
+especially if you want view all muon attributes as an object (as a row of a jagged table).
 
 \vspace{0.25 cm}
 \begin{uncoverenv}<2->
-awkward-array is a library in development to manipulate such structure like Numpy.
+awkward-array is a library \textcolor{darkorange}{(in development!)} to manipulate such structures like Numpy.
 
 \scriptsize
 \begin{minted}{python}
@@ -300,7 +300,7 @@ awkward-array is a library in development to manipulate such structure like Nump
 \item \textcolor{darkblue}{chunked:} for data that are not completely contiguous (i.e.\ ROOT baskets)
 \item \textcolor{darkblue}{indexed:} for pointers, cross-references, dictionary-encoding, event lists, trees\ldots
 \item \textcolor{darkblue}{masked:} for missing data (especially Apache Arrow bitmasks)
-\item \textcolor{darkblue}{virtual:} for selective reading, e.g.\ only a few branches of a ROOT file
+\item \textcolor{darkblue}{virtual:} for read-on-demand, e.g.\ only a few branches of a ROOT file
 \item \textcolor{darkblue}{unions:} for polymorphism
 \end{itemize}
 
@@ -336,7 +336,7 @@ vectorized algorithms to replace for-loop manipulations.
 >>> # apply cuts with Numpy-like masks:
 >>> events_with_two = events["muons"][events["muons"].counts >= 2]
 
->>> # explode to event-wise pairs of muons:
+>>> # explode to event-wise pairs of muons (using only SIMD operations):
 >>> pairs = events_with_two.pairs()
 >>> pairs
 <JaggedArray [[<Pair 0> <Pair 1> <Pair 2>] [<Pair 3>]] at 0x7fd394033080>
@@ -403,14 +403,14 @@ def run(pz, events):
 
 \begin{frame}{What does all of this buy us?}
 \vspace{0.5 cm}
-Analyze the same data, events containing muons with pt, eta, and phi, in many ways:
+Analyze the same data (events containing muons with pt, eta, and phi) in many ways:
 \begin{itemize}
 \item uproot $\to$ JaggedArray of Table
 \item root\_numpy $\to$ array of arrays
 \item C++ {\tt\small std::vector<std::vector<struct>>} (non-columnar, but efficient)
 \item Python list of lists of dicts
-\item Python list of lists of class objects (using {\tt\small \_\_slots\_\_})
-\item ROOT GetEntry, TTreeReader, RDataFrame (all in C++), PyROOT
+\item Python list of lists of class objects (using {\tt\small \_\_slots\_\_} for efficiency)
+\item ROOT TBranch::GetEntry, TTreeReader, RDataFrame (all in C++), PyROOT
 \end{itemize}
 
 \vspace{0.5 cm}
@@ -486,7 +486,7 @@ Analyze the same data, events containing muons with pt, eta, and phi, in many wa
 \begin{itemize}\setlength{\itemsep}{0.5 cm}
 \item Python has a model for expressing operations on columnar data: Numpy.
 \item We have to extend that model to handle the variable-length structures that are ubiquitous in HEP data.
-\item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching in vectorized instructions? \textcolor{gray}{(Part of Jaydeep's project.)}
+\item Opportunities for fundamental work: e.g.\ how do you do gen/reco jet matching using vectorized instructions? \textcolor{gray}{(Part of Jaydeep's project.)}
 \item Can hold more data in memory at a time than non-columnar C++ structures and process it faster, all with Pythonic syntax.
 \end{itemize}
 \end{frame}
