@@ -452,18 +452,18 @@ def run(pz, events):
 \hfill \textcolor{darkblue}{\small\underline{time to complete load, compute, or both (sec)}} & \\
 & \\
 \hfill \textcolor{rootcolor}{PyROOT load and compute} & 45.9 \\
-\hfill \textcolor{mycolor}{JaggedArray compute in Python for loops} & 12.9 \\
+\hfill \textcolor{mycolor}{JaggedArray compute in Python for loops} & 13.4 \\
 & \\
-\hfill \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} & \ 1.67 \\
+\hfill \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} & \ 1.96 \\
 \hfill \textcolor{pythoncolor}{Python list of lists of dicts in Python for loops} & \ 1.24 \\
 \hfill \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops} & \ 1.23 \\
-\hfill \textcolor{rootnpcolor}{root\_numpy load} & \ 1.01 \\
+\hfill \textcolor{rootnpcolor}{root\_numpy load} & \ 0.635 \\
 & \\
 \hfill \textcolor{rootcolor}{ROOT RDataFrame load and compute} & \ 0.163 \\          % -O0: 0.326, -O1: 0.172, -O2: 0.162, -O3: 0.163
 \hfill \textcolor{rootcolor}{ROOT TTreeReader load and compute} &  \ 0.091 \\        % -O0: 0.164, -O1: 0.071, -O2: 0.091, -O3: 0.091
 \hfill \textcolor{rootcolor}{ROOT TBranch::GetEntry load and compute} & \ 0.046 \\   % -O0: 0.052, -O1: 0.049, -O2: 0.049, -O3: 0.046
-\hfill \textcolor{mycolor}{uproot load} & \ 0.047 \\
-\hfill \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} & \ 0.030 \\
+\hfill \textcolor{mycolor}{uproot load} & \ 0.031 \\
+\hfill \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} & \ 0.023 \\
 \hfill \textcolor{mycolor}{JaggedArray compute in Numba-accelerated Python for loops} & \ 0.023 \\
 & \\
 \hfill \textcolor{gray}{\scriptsize all with warmed disk cache in the same environment} & \\
