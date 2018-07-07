@@ -291,7 +291,7 @@ awkward-array is a library \textcolor{darkorange}{(in development!)} to manipula
 \begin{frame}[fragile]{Manipulating columnar data}
 \vspace{0.5 cm}
 
-\underline{awkward-array is a suite of \textcolor{darkorange}{\bf composable}, high-level array types:}
+\underline{awkward-array is a suite of \textcolor{darkorange}{\bf composable} high-level array types:}
 
 \vspace{0.2 cm}
 \begin{itemize}
@@ -306,7 +306,7 @@ awkward-array is a library \textcolor{darkorange}{(in development!)} to manipula
 
 \vspace{0.5 cm}
 \begin{uncoverenv}<2->
-The data model is very flexible, but the data are strictly columnar:
+The data model is very flexible, but the data are accessed as columns:
 
 \scriptsize
 \begin{minted}{python}
@@ -364,7 +364,7 @@ reductions can at least be JIT-compiled. Numba (from Anaconda) is \\
 a JIT-compiler for Python code.
 
 \vspace{0.5 cm}
-I implemented awkward-array's predecessor, OAMap, as a Numba extension to get $\sim$500$\times$ speedups. I will apply the same techniques to the new library.
+I implemented awkward-array's predecessor, OAMap, as a Numba extension to get $\sim$500$\times$ speedups. The same techniques will be applied to the new library (not yet).
 
 \vspace{0.5 cm}
 \begin{columns}[t]
@@ -759,34 +759,6 @@ for (int i = 0;  i < 701716;  i++) {
 gettimeofday(&endtime, 0);
 \end{minted}
 \end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{{\tt std::vector<std::vector<struct>>}}
-\vspace{0.3 cm}
-\scriptsize
-\begin{minted}{c++}
-struct Muon {
-    float pt;
-    float eta;
-    float phi;
-};
-
-struct Event {
-    std::vector<Muon> muons;
-};
-
-auto events = // std::vector<std::vector<Muon>>, filled with push_back
-
-gettimeofday(&starttime, 0);
-int k = 0;
-for (int i = 0;  i < events.size();  i++) {
-    for (int j = 0;  j < events[i].muons.size();  j++) {
-        pz[k] = events[i].muons[j].pt * sinh(events[i].muons[j].eta);
-        k++;
-    }
-}
-gettimeofday(&endtime, 0);
-\end{minted}
 \end{frame}
 
 \end{document}
