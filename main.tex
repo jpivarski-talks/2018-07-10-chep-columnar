@@ -438,7 +438,6 @@ def run(pz, events):
 & \\
  37.19 & \textcolor{gray}{serialized JSON text (for reference)} \\
 & \\
- 22.38 & \textcolor{cppcolor}{\tt\scriptsize std::vector<std::vector<struct>>} \\
  11.67 & \textcolor{mycolor}{JaggedArray of Table of pt, eta, phi} \\
 & \\
 & \textcolor{gray}{\scriptsize 1 MB = 1024$^2$ bytes} \\
@@ -446,31 +445,28 @@ def run(pz, events):
 & \textcolor{gray}{\scriptsize storing pt, eta, phi as float32} \\
 \end{tabular}
 
-\vspace{2.3 cm}
+\vspace{1.67 cm}
 
 \column{0.6\linewidth}
-\begin{tabular}{r p{0.9\linewidth}}
-& \textcolor{darkblue}{\small\underline{time to complete load, compute, or both (sec)}} \\
+\begin{tabular}{p{0.83\linewidth} l}
+\hfill \textcolor{darkblue}{\small\underline{time to complete load, compute, or both (sec)}} & \\
 & \\
-45.9\textcolor{white}{00} & \textcolor{rootcolor}{PyROOT load and compute} \\
-12.9\textcolor{white}{00} & \textcolor{mycolor}{JaggedArray compute in Python for loops} \\
+\hfill \textcolor{rootcolor}{PyROOT load and compute} & 45.9 \\
+\hfill \textcolor{mycolor}{JaggedArray compute in Python for loops} & 12.9 \\
 & \\
-1.67\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} \\
- 1.24\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of dicts in Python for loops} \\
- 1.23\textcolor{white}{0} & \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops} \\
+\hfill \textcolor{rootnpcolor}{root\_numpy compute in loop over ufuncs} & \ 1.67 \\
+\hfill \textcolor{pythoncolor}{Python list of lists of dicts in Python for loops} & \ 1.24 \\
+\hfill \textcolor{pythoncolor}{Python list of lists of {\tt\scriptsize \_\_slots\_\_} classes in Python for loops} & \ 1.23 \\
+\hfill \textcolor{rootnpcolor}{root\_numpy load} & \ 1.01 \\
 & \\
- 1.01\textcolor{white}{0} & \textcolor{rootnpcolor}{root\_numpy load} \\
+\hfill \textcolor{rootcolor}{ROOT RDataFrame load and compute} & \ 0.163 \\          % -O0: 0.326, -O1: 0.172, -O2: 0.162, -O3: 0.163
+\hfill \textcolor{rootcolor}{ROOT TTreeReader load and compute} &  \ 0.091 \\        % -O0: 0.164, -O1: 0.071, -O2: 0.091, -O3: 0.091
+\hfill \textcolor{rootcolor}{ROOT TBranch::GetEntry load and compute} & \ 0.046 \\   % -O0: 0.052, -O1: 0.049, -O2: 0.049, -O3: 0.046
+\hfill \textcolor{mycolor}{uproot load} & \ 0.047 \\
+\hfill \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} & \ 0.030 \\
+\hfill \textcolor{mycolor}{JaggedArray compute in Numba-accelerated Python for loops} & \ 0.023 \\
 & \\
- 0.538 & \textcolor{rootcolor}{ROOT RDataFrame load and compute} \\
- 0.164 & \textcolor{rootcolor}{ROOT TTreeReader load and compute} \\
- 0.142 & \textcolor{rootcolor}{ROOT TBranch::GetEntry load and compute} \\
- 0.113 & \textcolor{cppcolor}{{\tt\scriptsize std::vector<std::vector<struct>>} compute} \\
-& \\
- 0.047 & \textcolor{mycolor}{uproot load} \\
- 0.030 & \textcolor{mycolor}{JaggedArray compute as Numpy-like ufunc} \\
- 0.023 & \textcolor{mycolor}{JaggedArray compute in Numba-accelerated Python for loops} \\
-& \\
-& \textcolor{gray}{\scriptsize all with warmed disk cache in the same environment} \\
+\hfill \textcolor{gray}{\scriptsize all with warmed disk cache in the same environment} & \\
 \end{tabular}
 \end{columns}
 \end{columns}
@@ -678,7 +674,6 @@ struct timeval starttime, endtime;
 
 auto file = TFile::Open("NanoAOD-DYJetsToLL.root")
 ROOT::RDataFrame rdf("tree", file);
-
 TTree* tree; file->GetObject("tree", tree);   // perhaps unnecessary, but just in case...
 tree->SetBranchStatus("*", 0);
 tree->SetBranchStatus("nMuon", 1);
@@ -688,7 +683,8 @@ tree->SetBranchStatus("Muon_eta", 1);
 float pz[552056];
 gettimeofday(&starttime, 0);
 int k = 0;
-rdf.Foreach([&k](ROOT::VecOps::RVec<float> Muon_pt, ROOT::VecOps::RVec<float> Muon_eta) {
+rdf.Foreach([&k](const ROOT::VecOps::RVec<float> &Muon_pt,
+                 const ROOT::VecOps::RVec<float> &Muon_eta) {
     for (int i = 0;  i < Muon_pt.size();  i++) {
         pz[k]= Muon_pt[i] * sinh(Muon_eta[i]);
         k++;
