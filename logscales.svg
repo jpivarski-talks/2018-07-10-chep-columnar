@@ -37,13 +37,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.9712712"
-     inkscape:cx="890.02522"
-     inkscape:cy="357.31572"
+     inkscape:cx="280.51471"
+     inkscape:cy="389.23265"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1080"
+     inkscape:window-width="954"
+     inkscape:window-height="1027"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -63,7 +63,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -243,14 +243,16 @@
     <text
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:end;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:end;baseline-shift:baseline;color:#000000;fill:#ff00cc;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
-       x="677.56506"
+       x="713.19006"
        y="571.59277"
        id="text4615"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4617"
-         x="677.56506"
-         y="571.59277">Python list of lists of __slots__ classes</tspan></text>
+         x="713.19006"
+         y="571.59277">Python list of lists of <tspan
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"
+   id="tspan3922">__slots__</tspan> classes</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#808080;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
@@ -316,7 +318,9 @@
          sodipodi:role="line"
          id="tspan4645"
          x="1334.0374"
-         y="675.60492">Python list of lists of __slots__ classes in Python for loops</tspan></text>
+         y="675.60492">Python list of lists of <tspan
+   style="-inkscape-font-specification:Droid Sans Mono;font-family:Droid Sans Mono;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+   id="tspan3924">__slots__</tspan> classes in Python for loops</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:end;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#008000;fill-opacity:1;stroke:none;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
@@ -893,38 +897,39 @@
     <text
        sodipodi:linespacing="125%"
        id="text3102"
-       y="774.48425"
+       y="770.48425"
        x="138.65508"
-       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#00ccff;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
+       style="font-size:32px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-indent:0;text-align:start;text-decoration:none;line-height:125%;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;baseline-shift:baseline;color:#000000;fill:#00aad4;fill-opacity:1;fill-rule:nonzero;stroke:none;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;font-family:Nimbus Sans L;-inkscape-font-specification:Nimbus Sans L"
        xml:space="preserve"><tspan
-         y="774.48425"
+         y="770.48425"
          x="138.65508"
          id="tspan3104"
-         sodipodi:role="line">std::vector&lt;std::vector&lt;struct&gt;&gt;</tspan></text>
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono">std::vector&lt;std::vector&lt;struct&gt;&gt;</tspan></text>
     <path
-       transform="matrix(2,0,0,2,-357.86018,-920.47729)"
+       transform="matrix(2,0,0,2,-357.86018,-924.47729)"
        d="m 200.86018,843.36877 a 3,3 0 1 1 -6,0 3,3 0 1 1 6,0 z"
        sodipodi:ry="3"
        sodipodi:rx="3"
        sodipodi:cy="843.36877"
        sodipodi:cx="197.86018"
-       style="color:#000000;fill:#00ccff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#00aad4;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        id="path3106"
        sodipodi:type="arc" />
     <path
        sodipodi:type="arc"
        id="path3108"
-       style="color:#000000;fill:#00ccff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.50000000000000000;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+       style="color:#000000;fill:#00aad4;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.5;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
        sodipodi:cx="197.86018"
        sodipodi:cy="843.36877"
        sodipodi:rx="3"
        sodipodi:ry="3"
        d="m 200.86018,843.36877 a 3,3 0 1 1 -6,0 3,3 0 1 1 6,0 z"
-       transform="matrix(2,0,0,2,-273.75304,-920.47729)" />
+       transform="matrix(2,0,0,2,-273.75304,-924.47729)" />
     <path
        inkscape:connector-curvature="0"
        id="path3110"
-       d="m 37.86018,766.26026 84.10714,0"
-       style="color:#000000;fill:#00ccff;fill-opacity:1;fill-rule:nonzero;stroke:#00ccff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+       d="m 37.86018,762.26026 84.10714,0"
+       style="color:#000000;fill:#00aad4;fill-opacity:1;fill-rule:nonzero;stroke:#00aad4;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
   </g>
 </svg>
